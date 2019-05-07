@@ -1,0 +1,48 @@
+body {
+  margin: 0;
+
+  font-family: 'Source Sans Pro', sans-serif;
+  line-height: 1.375;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+
+ol,
+ul,
+dl {
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  list-style: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a,
+button,
+span,
+label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

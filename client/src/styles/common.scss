@@ -1,0 +1,26 @@
+.container {
+  width: 100%;
+  min-width: 320px;
+  padding-right: 15px;
+  padding-left: 15px;
+
+  //tablet
+  @media screen and (min-width: $tablet-bp) {
+    padding-right: 24px;
+    padding-left: 24px;
+  }
+  //desktop
+  @media screen and (min-width: $desktop-bp) {
+    max-width: 1024px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-right: 47px;
+    padding-left: 47px;
+  }
+  //big-desktop
+  @media screen and (min-width: $big-desktop-bp) {
+    max-width: 1170px;
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+}
