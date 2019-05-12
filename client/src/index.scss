@@ -1,5 +1,11 @@
 @import 'styles/variables';
 @import 'styles/global';
 @import 'styles/common';
+@import 'styles/layout';
 
 // container's style imports
+
+@import 'styles/components/Container';
+@import 'styles/components/Header';
+@import 'styles/components/Footer';
+@import 'styles/components/MainContent';

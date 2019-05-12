@@ -1,0 +1,20 @@
+.layout__wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.layout__header {
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.layout__main-content {
+  flex-grow: 1;
+  flex-shrink: 0;
+}
+
+.layout__footer {
+  flex-grow: 0;
+  flex-shrink: 0;
+}
