@@ -7,7 +7,8 @@ const Note = mongoose.model('Note');
 
 module.exports.setUpConnection = () => {
   mongoose.connect(
-    `mongodb://${config.db.host}:${config.db.port}/${config.db.name}`
+    process.env.MONGODB_URI ||
+      `mongodb://${config.db.host}:${config.db.port}/${config.db.name}`
   );
 };
 
