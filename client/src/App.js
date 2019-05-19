@@ -4,7 +4,7 @@ import React from 'react';
 // components imports
 // import store from './store';
 
-import MainPage from './components/MainPage/MainPage';
+import MainPage from './components/MainPage';
 
 class App extends React.Component {
   // render() {

@@ -1,33 +1,36 @@
+const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 
 const config = require('../etc/config.json');
-
 const db = require('./utils/dataBaseUtils');
-// db.createNotes({
-//   title: 'Hello',
-//   text: 'Worlddddd',
-//   color: 'red'
-// }).then(
-//   data => {
-//     console.log(`data: ${data}`);
-//   },
-//   err => {
-//     console.log(`err: ${err}`);
-//   }
-// );
-const app = express();
+
+const clientBuildPath = '../client/build/';
+
 db.setUpConnection();
 
+const app = express();
+
+app.set('port', process.env.PORT || config.serverPort);
+
+// Express only serves static assets in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, clientBuildPath)));
+}
+
 app.use(bodyParser.json());
+
+// temp logging
 app.use((req, res, next) => {
   console.log(`Request receved from ${req.url}, method: ${req.method}`);
-
   next();
 });
 
-app.get('/', (req, res) => {
+app.get('/hi', (req, res) => {
   res.send('hi!!!');
+});
+app.get('/', (req, res) => {
+  res.send('hi index route!!!');
 });
 
 app.get('/notes', (req, res) => {
@@ -45,6 +48,12 @@ app.post('/notes', (req, res) => {
 
 app.delete('/notes/:id', (req, res) => {});
 
-app.listen(config.serverPort, () => {
-  console.log(`Server running on port ${config.serverPort}`);
+if (process.env.NODE_ENV === 'production') {
+  app.get('/*', (req, res, next) => {
+    res.sendFile(path.join(__dirname, clientBuildPath, 'index.html'));
+  });
+}
+
+app.listen(app.get('port'), () => {
+  console.log(`Server running on port ${app.get('port')}`);
 });

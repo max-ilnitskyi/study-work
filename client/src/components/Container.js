@@ -1,28 +1,15 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import styled from 'styled-components';
 
-const StyledWrapper = styled.div`
-  background-color: red;
+const Container = styled.div`
+  max-width: 740px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  margin-left: auto;
+  margin-right: auto;
+
+  background: ${props => props.background};
 `;
-
-class Container extends React.Component {
-  render() {
-    return (
-      <StyledWrapper>
-        <div className={classNames('container', this.props.className)}>
-          {this.props.children}
-        </div>
-      </StyledWrapper>
-    );
-  }
-}
-
-Container.propTypes = {
-  children: PropTypes.any,
-  className: PropTypes.any, // for container
-  wrapClassName: PropTypes.any
-};
 
 export default Container;
