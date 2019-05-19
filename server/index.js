@@ -7,7 +7,7 @@ const db = require('./utils/dataBaseUtils');
 
 const clientBuildPath = '../client/build/';
 
-// db.setUpConnection();
+db.setUpConnection();
 
 const app = express();
 
