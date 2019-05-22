@@ -5,6 +5,9 @@ import constants from '../../constants';
 import Container from '../Container';
 
 const FooterWrap = styled.div`
+  flex-shrink: 0;
+  flex-grow: 0;
+
   color: #fff;
   background-color: ${constants.styles.darkPrimaryColor};
 `;

@@ -1,5 +1,5 @@
 const actionTypes = {
-  // ther must be actionTypes
+  SET_NOTES: 'SET_NOTES'
 };
 
 export default actionTypes;

@@ -1,13 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 
-// import constants from '../../constants';
 import Container from '../Container';
 
-import bgPattern from '../../assets/imgs/bg-pattern-13.png';
+import bgPattern from '../../assets/imgs/bg-pattern.png';
 
 const MainContentWrap = styled.div`
-  height: 100%;
+  flex-shrink: 0;
+  flex-grow: 1;
+
   background-image: url(${bgPattern});
   background-size: 80px;
 `;
@@ -22,9 +23,7 @@ class MainContent extends React.Component {
   render() {
     return (
       <MainContentWrap>
-        <MainContentContainer>
-          <div> Hello! It's main content</div>
-        </MainContentContainer>
+        <MainContentContainer>{this.props.children}</MainContentContainer>
       </MainContentWrap>
     );
   }

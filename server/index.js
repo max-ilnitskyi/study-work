@@ -2,15 +2,15 @@ const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const config = require('../etc/config.json');
-const db = require('./utils/dataBaseUtils');
+const config = require('./config');
+const notesRouter = require('./routes/notes');
 
-const clientBuildPath = '../client/build/';
-
-db.setUpConnection();
+// relative path to static files
+const clientBuildPath = config.clientBuildPath;
 
 const app = express();
 
+// define port
 app.set('port', process.env.PORT || config.serverPort);
 
 // Express only serves static assets in production
@@ -26,33 +26,30 @@ app.use((req, res, next) => {
   next();
 });
 
+// test is [history fallback]? work
 app.get('/hi', (req, res) => {
   res.send('hi!!!');
 });
+// test is static work
 app.get('/', (req, res) => {
   res.send('hi index route!!!');
 });
 
-app.get('/notes', (req, res) => {
-  db.listNotes().then(data => res.send(data), err => res.send(err));
-});
+// connect nores router
+app.use('/api/notes', notesRouter);
 
-// post notes types:
-// title: { type: String },
-// text: { type: String, required: true },
-// color: { type: String },
-// createdAt: { type: Date }
-app.post('/notes', (req, res) => {
-  db.createNotes(req.body).then(data => res.send(data));
-});
-
-app.delete('/notes/:id', (req, res) => {});
-
+// try parody webpack dev server, always send index.html (if not resolved before)
 if (process.env.NODE_ENV === 'production') {
   app.get('/*', (req, res, next) => {
     res.sendFile(path.join(__dirname, clientBuildPath, 'index.html'));
   });
 }
+
+// TODO: make some normal logging
+// global errors handler
+app.use((error, req, res, next) => {
+  console.log(`-----some error: `, error);
+});
 
 app.listen(app.get('port'), () => {
   console.log(`Server running on port ${app.get('port')}`);

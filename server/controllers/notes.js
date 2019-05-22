@@ -1,16 +1,15 @@
 const mongoose = require('mongoose');
 require('../models/Notes');
 
-const config = require('../../etc/config.json');
+const config = require('../config');
 
 const Note = mongoose.model('Note');
 
-module.exports.setUpConnection = () => {
+module.exports.setUpConnection = () =>
   mongoose.connect(
-    process.env.MONGODB_URI ||
-      `mongodb://${config.db.host}:${config.db.port}/${config.db.name}`
+    config.mongodbUri,
+    { useNewUrlParser: true }
   );
-};
 
 module.exports.listNotes = () => {
   return Note.find();
