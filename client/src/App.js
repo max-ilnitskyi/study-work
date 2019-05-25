@@ -1,6 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { Route, BrowserRouter, Switch } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 import store from './store';
 
@@ -15,6 +16,9 @@ class App extends React.Component {
       <Provider store={store}>
         <BrowserRouter>
           <Page>
+            <Helmet>
+              <title>Study work</title>
+            </Helmet>
             <Switch>
               <Route exact path="/" component={MainPageContent} />
               <Route path="/about" component={AboutPageContent} />

@@ -1,9 +1,11 @@
 import { combineReducers } from 'redux';
 
 import notes from './notes/reducer';
+import forms from './forms/reducer';
 
 const reducer = combineReducers({
-  notes
+  notes,
+  ...forms
 });
 
 export default reducer;

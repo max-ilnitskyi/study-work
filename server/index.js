@@ -20,17 +20,18 @@ if (process.env.NODE_ENV === 'production') {
 
 app.use(bodyParser.json());
 
-// temp logging
+// logging / temp
 app.use((req, res, next) => {
   console.log(`Request receved from ${req.url}, method: ${req.method}`);
+  console.log('---actept: ', req.accepts('html'));
   next();
 });
 
-// test is [history fallback]? work
+// test is [history fallback]? work / temp
 app.get('/hi', (req, res) => {
   res.send('hi!!!');
 });
-// test is static work
+// test is static work / temp
 app.get('/', (req, res) => {
   res.send('hi index route!!!');
 });
@@ -40,10 +41,17 @@ app.use('/api/notes', notesRouter);
 
 // try parody webpack dev server, always send index.html (if not resolved before)
 if (process.env.NODE_ENV === 'production') {
-  app.get('/*', (req, res, next) => {
+  app.get('*', (req, res, next) => {
+    if (!req.accepts('html')) next();
+
     res.sendFile(path.join(__dirname, clientBuildPath, 'index.html'));
   });
 }
+
+// wrong request
+app.use((req, res) => {
+  res.sendStatus(400);
+});
 
 // TODO: make some normal logging
 // global errors handler

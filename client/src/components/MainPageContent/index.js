@@ -1,15 +1,17 @@
 import React from 'react';
-import styled from 'styled-components';
+// import styled from 'styled-components';
 
-const StyledMainPageConten = styled.div``;
+import PageContentWrap from '../PageContentWrap';
 
 class MainPageContent extends React.Component {
   render() {
     return (
-      <StyledMainPageConten>
-        This is my super-duper node.js/express/mongodb/react/redux...
-        application!!!
-      </StyledMainPageConten>
+      <PageContentWrap>
+        <p>
+          This is my super-duper node.js/express/mongodb/react/redux...
+          application!!!
+        </p>
+      </PageContentWrap>
     );
   }
 }

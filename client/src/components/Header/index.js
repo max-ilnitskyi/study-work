@@ -10,17 +10,22 @@ const HeaderWrap = styled.div`
   flex-grow: 0;
   z-index: 10;
 
-  background-color: ${constants.styles.lightPrimaryColor};
+  background-color: ${constants.styles.LIGHT_PRIMARY_COLOR};
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+`;
+
+const HeaderContainer = styled(Container)`
+  padding-top: 15px;
+  padding-bottom: 15px;
 `;
 
 class Header extends React.Component {
   render() {
     return (
       <HeaderWrap>
-        <Container>
+        <HeaderContainer>
           <Nav />
-        </Container>
+        </HeaderContainer>
       </HeaderWrap>
     );
   }

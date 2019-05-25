@@ -20,10 +20,10 @@ const StyledNavLink = styled(NavLink)`
   text-transform: uppercase;
   font-weight: bold;
   text-decoration: none;
-  color: ${constants.styles.darkSecondaryColor};
+  color: ${constants.styles.DARK_SECONDARY_COLOR};
 
   &:hover {
-    color: ${constants.styles.secondaryColor};
+    color: ${constants.styles.SECONDARY_COLOR};
   }
 `;
 

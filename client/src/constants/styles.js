@@ -1,16 +1,16 @@
 const styles = {
   // primary colors >>>
-  primaryColor: '#afd9da',
-  darkPrimaryColor: '#31494F',
-  lightPrimaryColor: '#DAE9EF',
+  PRIMARY_COLOR: '#afd9da',
+  DARK_PRIMARY_COLOR: '#31494F',
+  LIGHT_PRIMARY_COLOR: '#DAE9EF',
   // secondary colors >>>
-  secondaryColor: '#F7A84F',
-  darkSecondaryColor: '#A86428',
-  lightSecondaryColor: '#FFCE9E',
+  SECONDARY_COLOR: '#F7A84F',
+  DARK_SECONDARY_COLOR: '#A86428',
+  LIGHT_SECONDARY_COLOR: '#FFCE9E',
   // other colors >>>
-  commonGrey: '#878787',
-  lightGrey: '#ccc',
-  darkGrey: '#333'
+  GREY_COLOR: '#878787',
+  LIGHT_GREY_COLOR: '#ccc',
+  DARK_GREY_COLOR: '#333'
 };
 
 export default styles;

@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
-require('../models/Notes');
+const Note = require('../models/Notes');
 
 const config = require('../config');
 
-const Note = mongoose.model('Note');
+// backup / temp
+// const Note = mongoose.model('Note');
 
 module.exports.setUpConnection = () =>
   mongoose.connect(
@@ -27,5 +28,5 @@ module.exports.createNotes = data => {
 };
 
 module.exports.deleteNotes = id => {
-  return Note.findById(id).remove();
+  return Note.deleteOne({ _id: id });
 };

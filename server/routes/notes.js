@@ -8,11 +8,15 @@ notesDb
   .setUpConnection()
   .then(res => {
     isNotesDbConnected = true;
-    console.log('Notes db connection succeed');
+    console.log('Notes db connection succeed', res);
+    console.log(
+      'Notes db connection succeed MONGODB_URI',
+      process.env.MONGODB_URI
+    );
   })
   .catch(err => {
     isNotesDbConnected = false;
-    console.log('Notes db connection error');
+    console.log('Notes db connection error!', err);
   });
 
 const router = new express.Router();
@@ -45,6 +49,11 @@ router.delete('/:id', (req, res) => {
     .deleteNotes(req.params.id)
     .then(data => res.sendStatus(200))
     .catch(err => res.sendStatus(500));
+});
+
+// wrong request
+router.use((req, res) => {
+  res.sendStatus(400);
 });
 
 module.exports = router;

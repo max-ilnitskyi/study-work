@@ -9,16 +9,21 @@ const FooterWrap = styled.div`
   flex-grow: 0;
 
   color: #fff;
-  background-color: ${constants.styles.darkPrimaryColor};
+  background-color: ${constants.styles.DARK_PRIMARY_COLOR};
+`;
+
+const FooterContainer = styled(Container)`
+  padding-top: 15px;
+  padding-bottom: 15px;
 `;
 
 class Footer extends React.Component {
   render() {
     return (
       <FooterWrap>
-        <Container>
+        <FooterContainer>
           <div> Hello! It's footer</div>
-        </Container>
+        </FooterContainer>
       </FooterWrap>
     );
   }

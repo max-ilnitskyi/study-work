@@ -1,12 +1,18 @@
 import React from 'react';
-import styled from 'styled-components';
+import { Helmet } from 'react-helmet';
+// import styled from 'styled-components';
 
-const StyledAboutPageContent = styled.div``;
+import PageContentWrap from '../PageContentWrap';
 
 class AboutPageContent extends React.Component {
   render() {
     return (
-      <StyledAboutPageContent>This application awesome</StyledAboutPageContent>
+      <PageContentWrap>
+        <Helmet>
+          <title>About - Study work</title>
+        </Helmet>
+        <p>This application awesome</p>
+      </PageContentWrap>
     );
   }
 }

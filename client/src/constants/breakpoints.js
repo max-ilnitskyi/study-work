@@ -1,7 +1,7 @@
 const breakpoints = {
-  tablet: 768,
-  desktop: 1024,
-  bigDesktop: 1200
+  TABLET: 768,
+  DESKTOP: 1024,
+  BIG_DESKTOP: 1200
 };
 
 export default breakpoints;

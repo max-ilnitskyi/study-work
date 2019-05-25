@@ -15,7 +15,6 @@ const MainContentWrap = styled.div`
 
 const MainContentContainer = styled(Container)`
   height: 100%;
-  background-color: #fff;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 `;
 
