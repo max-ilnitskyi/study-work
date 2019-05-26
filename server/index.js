@@ -23,7 +23,6 @@ app.use(bodyParser.json());
 // logging / temp
 app.use((req, res, next) => {
   console.log(`Request receved from ${req.url}, method: ${req.method}`);
-  console.log('---actept: ', req.accepts('html'));
   next();
 });
 

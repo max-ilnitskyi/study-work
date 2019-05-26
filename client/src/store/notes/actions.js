@@ -10,16 +10,18 @@ export const setNotes = notes => ({
   payload: notes
 });
 
-let delay = 500;
 export const fetchNotes = () => {
   return dispatch => {
     fetch(`/api/notes`, {
-      // headers: {
-      //   Accept: 'application/json'
-      // }
+      headers: {
+        Accept: 'application/json'
+      }
     })
       .then(response => {
         console.log('---response fetchNotes1: ', response); //temp
+        if (!response.ok) {
+          throw new Error(`Response is not ok, status: ${response.status}`);
+        }
         return response.json();
       })
       .then(data => {
@@ -30,24 +32,14 @@ export const fetchNotes = () => {
         dispatch(setNotes(data));
 
         console.log('---response fetchNotes2: ', data); //temp
-
-        delay = 500;
       })
       .catch(err => {
         if (process.env.NODE_ENV !== 'production')
           console.log('---error fetchNotes: ', err);
-
-        if (delay !== null) {
-          setTimeout(() => {
-            dispatch(fetchNotes());
-          }, delay);
-          delay = delay * 2;
-        }
       });
   };
 };
 
-let delay2 = 500;
 export const postNote = note => {
   return dispatch => {
     fetch(`/api/notes`, {
@@ -59,8 +51,10 @@ export const postNote = note => {
     })
       .then(response => {
         console.log('---response postNote: ', response); //temp
+        if (!response.ok) {
+          throw new Error(`Response is not ok, status: ${response.status}`);
+        }
         dispatch(fetchNotes());
-        delay2 = 500;
       })
       // .then(data => {
       //   // TODO: chek data for success
@@ -76,13 +70,6 @@ export const postNote = note => {
       .catch(err => {
         if (process.env.NODE_ENV !== 'production')
           console.log('---error postNote: ', err);
-
-        if (delay2 !== null) {
-          setTimeout(() => {
-            dispatch(postNote());
-          }, delay2);
-          delay2 = delay2 * 2;
-        }
       });
   };
 };
@@ -94,6 +81,9 @@ export const deleteNote = noteId => {
     })
       .then(response => {
         console.log('---response deleteNote: ', response); //temp
+        if (!response.ok) {
+          throw new Error(`Response is not ok, status: ${response.status}`);
+        }
         dispatch(fetchNotes());
       })
       .catch(err => {
