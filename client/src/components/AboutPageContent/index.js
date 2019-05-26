@@ -11,7 +11,7 @@ class AboutPageContent extends React.Component {
         <Helmet>
           <title>About - Study work</title>
         </Helmet>
-        <p>This application awesome</p>
+        <p>This application awesome!!!!!!!!!!!!</p>
       </PageContentWrap>
     );
   }
