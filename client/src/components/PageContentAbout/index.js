@@ -4,17 +4,17 @@ import { Helmet } from 'react-helmet';
 
 import PageContentWrap from '../PageContentWrap';
 
-class AboutPageContent extends React.Component {
+class PageContentAbout extends React.Component {
   render() {
     return (
       <PageContentWrap>
         <Helmet>
           <title>About - Study work</title>
         </Helmet>
-        <p>This application awesome!!!!!!!!!!!!</p>
+        <p>This application awesome</p>
       </PageContentWrap>
     );
   }
 }
 
-export default AboutPageContent;
+export default PageContentAbout;

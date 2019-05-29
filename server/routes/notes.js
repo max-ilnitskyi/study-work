@@ -1,6 +1,7 @@
 const express = require('express');
 
 const notesDb = require('../controllers/notes');
+const config = require('../config');
 
 // TODO: consider breaking of connection
 let isNotesDbConnected = false;
@@ -8,15 +9,11 @@ notesDb
   .setUpConnection()
   .then(res => {
     isNotesDbConnected = true;
-    console.log('Notes db connection succeed', res);
-    console.log(
-      'Notes db connection succeed MONGODB_URI',
-      process.env.MONGODB_URI
-    );
+    console.log('Notes db connection succeed, config uri: ', config.mongodbUri);
   })
   .catch(err => {
     isNotesDbConnected = false;
-    console.log('Notes db connection error!', err);
+    console.log('Notes db connection error: ', err);
   });
 
 const router = new express.Router();

@@ -11,7 +11,7 @@ const clientBuildPath = config.clientBuildPath;
 const app = express();
 
 // define port
-app.set('port', process.env.PORT || config.serverPort);
+app.set('port', config.serverPort);
 
 // Express only serves static assets in production
 if (process.env.NODE_ENV === 'production') {

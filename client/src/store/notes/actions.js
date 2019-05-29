@@ -25,12 +25,7 @@ export const fetchNotes = () => {
         return response.json();
       })
       .then(data => {
-        // TODO: chek data for success
-        // if (!data.success) return Promise.reject(new Error(data.message));
-
-        // TODO: wrap respons with meta-data, move notes to data.notes
         dispatch(setNotes(data));
-
         console.log('---response fetchNotes2: ', data); //temp
       })
       .catch(err => {
@@ -40,7 +35,7 @@ export const fetchNotes = () => {
   };
 };
 
-export const postNote = note => {
+export const postNote = (note, successCallback) => {
   return dispatch => {
     fetch(`/api/notes`, {
       method: 'post',
@@ -54,19 +49,10 @@ export const postNote = note => {
         if (!response.ok) {
           throw new Error(`Response is not ok, status: ${response.status}`);
         }
+
+        if (typeof successCallback === 'function') successCallback();
         dispatch(fetchNotes());
       })
-      // .then(data => {
-      //   // TODO: chek data for success
-      //   // if (!data.success) return Promise.reject(new Error(data.message));
-      //
-      //   // TODO: wrap respons with meta-data, move notes to data.notes
-      //   dispatch(setNotes(data));
-      //
-      //   console.log('---response 2: ', data); //temp
-      //
-      //   delay2 = 500;
-      // })
       .catch(err => {
         if (process.env.NODE_ENV !== 'production')
           console.log('---error postNote: ', err);

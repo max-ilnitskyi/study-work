@@ -5,14 +5,16 @@ import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 
 import PageContentWrap from '../PageContentWrap';
-import NewNoteForm from '../NewNoteForm';
+import FormNewNote from '../FormNewNote';
 
 import { notesList } from '../../store/notes/selectors';
 import { fetchNotes, deleteNote } from '../../store/notes/actions';
 
 import Note from './Note';
 
-const NotesList = styled.div``;
+const NotesList = styled.div`
+  ${'' /* here must be styles */}
+`;
 
 const NotesListItem = styled.div`
   margin-top: 30px;
@@ -25,7 +27,7 @@ const NewNoteFormWrap = styled.div`
   margin-top: 30px;
 `;
 
-class NotesPageContent extends React.Component {
+class PageContentNotes extends React.Component {
   render() {
     return (
       <PageContentWrap>
@@ -40,7 +42,7 @@ class NotesPageContent extends React.Component {
           ))}
         </NotesList>
         <NewNoteFormWrap>
-          <NewNoteForm />
+          <FormNewNote />
         </NewNoteFormWrap>
       </PageContentWrap>
     );
@@ -55,7 +57,7 @@ class NotesPageContent extends React.Component {
   };
 }
 
-NotesPageContent.propTypes = {
+PageContentNotes.propTypes = {
   notesList: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string,
@@ -80,4 +82,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(NotesPageContent);
+)(PageContentNotes);

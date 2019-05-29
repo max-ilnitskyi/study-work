@@ -19,26 +19,30 @@ const NoteWrap = styled.div`
   padding: 10px;
 
   background-color: #fff;
-  background-color: ${props => props.backgroundColor};
   border-radius: 5px;
   border: 2px solid ${constants.styles.PRIMARY_COLOR};
+   ${props => props.color && `border: 2px solid ${props.color};`}
 
   animation: ${show} 0.5s ease;
 `;
 
 const DeleteButton = styled.button`
   position: absolute;
-  padding: 0px 5px;
-  right: 2px;
-  top: 2px;
+  padding: 3px 5px;
+  right: 5px;
+  top: 5px;
 
-  font-size: 20px;
+  font-size: 16px;
   line-height: 1;
+  font-weight: 600;
   background-color: #fff;
+  background-color: rgba(255, 0, 0, 0.3);
   border-radius: 3px;
   cursor: pointer;
   border: none;
-  opacity: 0.5;
+  opacity: 0.3;
+  box-shadow: -1px 1px 3px rgba(0, 0, 0, 0.1);
+
   transition: 0.2s;
 
   ${NoteWrap}:hover & {
@@ -53,9 +57,9 @@ const NoteText = styled.p``;
 class Note extends React.Component {
   render() {
     return (
-      <NoteWrap backgroundColor={this.props.color}>
+      <NoteWrap color={this.props.color}>
         <DeleteButton type="button" onClick={this.handleDeleteButtonClick}>
-          x
+          delete
         </DeleteButton>
         <NoteTitle>{this.props.title}</NoteTitle>
         <NoteText>{this.props.text}</NoteText>

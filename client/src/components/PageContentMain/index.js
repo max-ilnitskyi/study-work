@@ -3,7 +3,7 @@ import React from 'react';
 
 import PageContentWrap from '../PageContentWrap';
 
-class MainPageContent extends React.Component {
+class PageContentMain extends React.Component {
   render() {
     return (
       <PageContentWrap>
@@ -16,4 +16,4 @@ class MainPageContent extends React.Component {
   }
 }
 
-export default MainPageContent;
+export default PageContentMain;

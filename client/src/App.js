@@ -6,9 +6,9 @@ import { Helmet } from 'react-helmet';
 import store from './store';
 
 import Page from './components/Page';
-import MainPageContent from './components/MainPageContent';
-import AboutPageContent from './components/AboutPageContent';
-import NotesPageContent from './components/NotesPageContent';
+import PageContentMain from './components/PageContentMain';
+import PageContentAbout from './components/PageContentAbout';
+import PageContentNotes from './components/PageContentNotes';
 
 class App extends React.Component {
   render() {
@@ -20,9 +20,9 @@ class App extends React.Component {
               <title>Study work</title>
             </Helmet>
             <Switch>
-              <Route exact path="/" component={MainPageContent} />
-              <Route path="/about" component={AboutPageContent} />
-              <Route path="/notes" component={NotesPageContent} />
+              <Route exact path="/" component={PageContentMain} />
+              <Route path="/about" component={PageContentAbout} />
+              <Route path="/notes" component={PageContentNotes} />
             </Switch>
           </Page>
         </BrowserRouter>
