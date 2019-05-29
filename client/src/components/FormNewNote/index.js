@@ -86,7 +86,7 @@ class FormNewNote extends React.Component {
             </FormLine>
 
             <Button type="submit" disabled={isSubmitting}>
-              Poste note!
+              Post note!
             </Button>
           </StyledForm>
         )}
