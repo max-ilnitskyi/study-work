@@ -35,7 +35,7 @@ export const fetchNotes = () => {
   };
 };
 
-export const postNote = (note, successCallback) => {
+export const postNote = (note, onApiSuccess, onApiError) => {
   return dispatch => {
     fetch(`/api/notes`, {
       method: 'post',
@@ -50,12 +50,14 @@ export const postNote = (note, successCallback) => {
           throw new Error(`Response is not ok, status: ${response.status}`);
         }
 
-        if (typeof successCallback === 'function') successCallback();
+        if (typeof onApiSuccess === 'function') onApiSuccess();
         dispatch(fetchNotes());
       })
       .catch(err => {
         if (process.env.NODE_ENV !== 'production')
           console.log('---error postNote: ', err);
+
+        if (typeof onApiError === 'function') onApiError();
       });
   };
 };
