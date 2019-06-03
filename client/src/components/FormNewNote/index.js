@@ -1,16 +1,18 @@
 import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { Formik, withFormik, Form, Field, ErrorMessage } from 'formik';
+import { withFormik, Form, Field, ErrorMessage } from 'formik';
 import PropTypes from 'prop-types';
 import * as yup from 'yup';
+
+import Loading from '../Loading';
 
 import constants from '../../constants';
 
 // import { notesList } from '../../store/notes/selectors';
 import { postNote } from '../../store/notes/actions';
-import validateYupShemaToObject from '../../utils/validateYupShemaToObject';
 
+// [ Styled Components >>>>>>>
 const StyledForm = styled(Form)`
   padding: 20px 10px;
 
@@ -98,113 +100,66 @@ const Title = styled.h3`
   margin-bottom: 20px;
 `;
 
-// const validationSchema = yup.object().shape({
-//   text: yup
-//     .string()
-//     .required('E-mail is required!')
-//     .min(3, 'Need more!'),
-//   title: yup
-//     .string()
-//     .required('E-mail is required!')
-//     .min(3, 'Need more!')
-// });
+const LoadingWrap = styled.div`
+  width: 100px;
+  margin-top: 10px;
+`;
+// <<<<<<< Styled Components ]
 
 class FormNewNote extends React.Component {
   render() {
+    console.log(this.props); //temp
     return (
-      <Formik
-        initialValues={{
-          title: '',
-          text: '',
-          color: constants.styles.PRIMARY_COLOR // must be the same as checked
-        }}
-        // validationSchema={validationSchema}
-        validate={this.validate}
-        onSubmit={this.handleFormSubmit}
-      >
-        {props => (
-          <StyledForm>
-            <Title>Create new note:</Title>
-            <FormLine>
-              <Label htmlFor="FormNewNote.title">Title: </Label>
-              <TextField type="text" name="title" id="FormNewNote.title" />
-              <StyledError name="title" /> {/* temp */}
-            </FormLine>
+      <StyledForm>
+        <Title>Create new note:</Title>
+        <FormLine>
+          <Label htmlFor="FormNewNote.title">Title: </Label>
+          <TextField type="text" name="title" id="FormNewNote.title" />
+          <StyledError name="title" /> {/* temp */}
+        </FormLine>
 
-            <FormLine>
-              <FakeLabel>Color:</FakeLabel>
+        <FormLine>
+          <FakeLabel>Color:</FakeLabel>
 
-              <ChooseColor
-                name="color"
-                id="FormNewNote.color.default"
-                value={constants.styles.PRIMARY_COLOR} // must be the same as default
-                checked={props.values.color === constants.styles.PRIMARY_COLOR}
-              />
-              <ChooseColorLabel htmlFor="FormNewNote.color.default" />
+          <ChooseColor
+            name="color"
+            id="FormNewNote.color.default"
+            value={constants.styles.PRIMARY_COLOR} // must be the same as default
+            checked={this.props.values.color === constants.styles.PRIMARY_COLOR}
+          />
+          <ChooseColorLabel htmlFor="FormNewNote.color.default" />
 
-              <ChooseColor
-                name="color"
-                id="FormNewNote.color.red"
-                value="red"
-              />
-              <ChooseColorLabel htmlFor="FormNewNote.color.red" />
+          <ChooseColor name="color" id="FormNewNote.color.red" value="red" />
+          <ChooseColorLabel htmlFor="FormNewNote.color.red" />
 
-              <ChooseColor
-                name="color"
-                id="FormNewNote.color.green"
-                value="green"
-              />
-              <ChooseColorLabel htmlFor="FormNewNote.color.green" />
+          <ChooseColor
+            name="color"
+            id="FormNewNote.color.green"
+            value="green"
+          />
+          <ChooseColorLabel htmlFor="FormNewNote.color.green" />
 
-              <ChooseColor
-                name="color"
-                id="FormNewNote.color.blue"
-                value="blue"
-              />
-              <ChooseColorLabel htmlFor="FormNewNote.color.blue" />
-            </FormLine>
-            <FormLine>
-              <Label htmlFor="FormNewNote.text">Text: </Label>
-              <TextArea name="text" id="FormNewNote.text" rows="5" />
-              <StyledError name="text" />
-            </FormLine>
-            <Button type="submit" disabled={props.isSubmitting}>
-              Post note!
-            </Button>
-            <Button style={{ marginLeft: '20px' }} type="reset">
-              reset?
-            </Button>
-          </StyledForm>
+          <ChooseColor name="color" id="FormNewNote.color.blue" value="blue" />
+          <ChooseColorLabel htmlFor="FormNewNote.color.blue" />
+        </FormLine>
+        <FormLine>
+          <Label htmlFor="FormNewNote.text">Text: </Label>
+          <TextArea name="text" id="FormNewNote.text" rows="5" />
+          <StyledError name="text" />
+        </FormLine>
+        <Button type="submit" disabled={this.props.isSubmitting}>
+          Post note!
+        </Button>
+        <Button style={{ marginLeft: '20px' }} type="reset">
+          reset?
+        </Button>
+        {this.props.isSubmitting && (
+          <LoadingWrap>
+            <Loading />
+          </LoadingWrap>
         )}
-      </Formik>
-    );
-  }
-
-  handleFormSubmit = (data, actions) => {
-    console.log('---test actions', actions);
-    console.log('---test data', data);
-    console.log('---test this.props.isSubmitting: ', this.props.isSubmitting);
-    // setSubmitting(true); // temp, need no more
-    // this.props.postNote(data, setSubmitting);
-    setTimeout(
-      () => this.props.postNote(data, actions.resetForm, actions.setSubmitting),
-      1000
-    ); // temp, up - better
-  };
-
-  validate(values) {
-    return validateYupShemaToObject(
-      values,
-      yup.object().shape({
-        text: yup
-          .string()
-          .min(3, 'Need more!')
-          .required('Text is required!'),
-        title: yup
-          .string()
-          .min(3, 'Need more!')
-          .required('Title is required!')
-      })
+        <p>{this.props.status}</p>
+      </StyledForm>
     );
   }
 }
@@ -221,7 +176,42 @@ const mapDispatchToProps = {
   postNote
 };
 
+const yupSchema = yup.object().shape({
+  text: yup
+    .string()
+    .min(3, 'Need more!')
+    .required('Text is required!'),
+  title: yup
+    .string()
+    .min(3, 'Need more!')
+    .required('Title is required!')
+});
+
+const formikOptions = {
+  mapPropsToValues: () => ({
+    title: '',
+    text: '',
+    color: constants.styles.PRIMARY_COLOR // must be the same as checked
+  }),
+  validationSchema: yupSchema,
+  handleSubmit: (values, formikBag) => {
+    console.log('---test actions', formikBag);
+    console.log('---test data', values);
+    formikBag.props.postNote(
+      values,
+      () => {
+        formikBag.setStatus('success');
+        formikBag.resetForm();
+      },
+      () => {
+        formikBag.setStatus('error');
+        formikBag.setSubmitting(false);
+      }
+    );
+  }
+};
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withFormik(FormNewNote));
+)(withFormik(formikOptions)(FormNewNote));

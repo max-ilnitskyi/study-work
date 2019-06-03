@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import constants from '../../constants';
 import { navLinks } from '../../data';
 
-const StyledNav = styled.ul`
+const NavWrap = styled.ul`
   display: flex;
 `;
 
@@ -30,13 +30,13 @@ const StyledNavLink = styled(NavLink)`
 class Nav extends React.Component {
   render() {
     return (
-      <StyledNav>
+      <NavWrap>
         {navLinks.map(({ name, href }) => (
           <StyledNavItem key={name}>
             <StyledNavLink to={href}>{name}</StyledNavLink>
           </StyledNavItem>
         ))}
-      </StyledNav>
+      </NavWrap>
     );
   }
 }

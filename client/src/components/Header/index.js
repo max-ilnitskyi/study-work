@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import constants from '../../constants';
 import Container from '../Container';
 import Nav from '../Nav';
+import UserPanel from '../UserPanel';
 
 const HeaderWrap = styled.div`
   flex-shrink: 0;
@@ -15,8 +16,21 @@ const HeaderWrap = styled.div`
 `;
 
 const HeaderContainer = styled(Container)`
+  display: flex;
+  align-items: center;
   padding-top: 15px;
   padding-bottom: 15px;
+`;
+
+const HeaderNavWrap = styled.div`
+  flex-shrink: 0;
+  flex-grow: 0;
+`;
+
+const HeaderUserPanelWrap = styled.div`
+  flex-shrink: 0;
+  flex-grow: 0;
+  margin-left: auto;
 `;
 
 class Header extends React.Component {
@@ -24,7 +38,12 @@ class Header extends React.Component {
     return (
       <HeaderWrap>
         <HeaderContainer>
-          <Nav />
+          <HeaderNavWrap>
+            <Nav />
+          </HeaderNavWrap>
+          <HeaderUserPanelWrap>
+            <UserPanel />
+          </HeaderUserPanelWrap>
         </HeaderContainer>
       </HeaderWrap>
     );

@@ -16,6 +16,8 @@ const MainContentWrap = styled.div`
 const MainContentContainer = styled(Container)`
   height: 100%;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+
+  background-color: #fff;
 `;
 
 class MainContent extends React.Component {
