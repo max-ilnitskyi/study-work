@@ -11,6 +11,7 @@ import PageContentAbout from './components/PageContentAbout';
 import PageContentNotes from './components/PageContentNotes';
 import PageRegistration from './components/PageRegistration';
 import NotFound from './components/NotFound';
+import Messages from './components/Messages';
 
 class App extends React.Component {
   render() {
@@ -28,6 +29,7 @@ class App extends React.Component {
               <Route path="/registration" component={PageRegistration} />
               <Route component={NotFound} />
             </Switch>
+            <Messages />
           </Page>
         </BrowserRouter>
       </Provider>

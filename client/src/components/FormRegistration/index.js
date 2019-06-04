@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { withFormik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import PropTypes from 'prop-types';
 import * as yup from 'yup';
 
@@ -90,70 +90,6 @@ const Title = styled.h3`
   margin-bottom: 20px;
 `;
 // <<<<<<< Styled Components ]
-
-class FormRegistration extends React.Component {
-  render() {
-    return (
-      <FormWrap>
-        <Title>Create new account:</Title>
-        <FormLine>
-          <Label htmlFor="FormRegistration.login">Login: </Label>
-          <TextField type="text" name="login" id="FormRegistration.login" />
-          <StyledError name="login" />
-        </FormLine>
-
-        <FormLine>
-          <Label htmlFor="FormRegistration.password1">Password: </Label>
-          <TextField
-            type="password"
-            name="password1"
-            id="FormRegistration.password1"
-          />
-          <StyledError name="password1" />
-        </FormLine>
-
-        <FormLine>
-          <Label htmlFor="FormRegistration.password2">Repeat password: </Label>
-          <TextField
-            type="password"
-            name="password2"
-            id="FormRegistration.password2"
-          />
-          <StyledError name="password2" />
-        </FormLine>
-
-        <FormLine>
-          <Label htmlFor="FormRegistration.accept">
-            Do you accept our rules?
-          </Label>
-          <AcceptRules name="accept" id="FormRegistration.accept" value="yes" />
-          <AcceptRulesLabel htmlFor="FormRegistration.accept" />
-          <StyledError name="accept" />
-        </FormLine>
-
-        <Button type="submit" disabled={this.props.isSubmitting}>
-          Registrate new user!
-        </Button>
-        <Button style={{ marginLeft: '20px' }} type="reset">
-          reset?
-        </Button>
-      </FormWrap>
-    );
-  }
-}
-
-FormRegistration.propTypes = {
-  setUser: PropTypes.func.isRequired
-};
-
-const mapStateToProps = state => ({
-  // notesList: notesList(state)
-});
-
-const mapDispatchToProps = {
-  setUser
-};
-
 const yupSchema = yup.object().shape({
   login: yup
     .string()
@@ -173,15 +109,76 @@ const yupSchema = yup.object().shape({
     .oneOf([true], 'Your must accept our rules for registration!')
 });
 
-const formikOptions = {
-  mapPropsToValues: () => ({
-    login: '',
-    password1: '',
-    password2: '',
-    accept: false // must be the same as checked
-  }),
-  validationSchema: yupSchema,
-  handleSubmit: (values, formikBag) => {
+class FormRegistration extends React.Component {
+  render() {
+    return (
+      <Formik
+        initialValues={{
+          login: '',
+          password1: '',
+          password2: '',
+          accept: false // must be the same as checked
+        }}
+        validationSchema={yupSchema}
+        onSubmit={this.handleSubmit}
+      >
+        {props => (
+          <FormWrap>
+            <Title>Create new account:</Title>
+            <FormLine>
+              <Label htmlFor="FormRegistration.login">Login: </Label>
+              <TextField type="text" name="login" id="FormRegistration.login" />
+              <StyledError name="login" />
+            </FormLine>
+
+            <FormLine>
+              <Label htmlFor="FormRegistration.password1">Password: </Label>
+              <TextField
+                type="password"
+                name="password1"
+                id="FormRegistration.password1"
+              />
+              <StyledError name="password1" />
+            </FormLine>
+
+            <FormLine>
+              <Label htmlFor="FormRegistration.password2">
+                Repeat password:{' '}
+              </Label>
+              <TextField
+                type="password"
+                name="password2"
+                id="FormRegistration.password2"
+              />
+              <StyledError name="password2" />
+            </FormLine>
+
+            <FormLine>
+              <Label htmlFor="FormRegistration.accept">
+                Do you accept our rules?
+              </Label>
+              <AcceptRules
+                name="accept"
+                id="FormRegistration.accept"
+                value="yes"
+              />
+              <AcceptRulesLabel htmlFor="FormRegistration.accept" />
+              <StyledError name="accept" />
+            </FormLine>
+
+            <Button type="submit" disabled={this.props.isSubmitting}>
+              Registrate new user!
+            </Button>
+            <Button style={{ marginLeft: '20px' }} type="reset">
+              reset?
+            </Button>
+          </FormWrap>
+        )}
+      </Formik>
+    );
+  }
+
+  handleSubmit = (values, formikBag) => {
     console.log('---test actions', formikBag);
     console.log('---test data', values);
     formikBag.props.postNote(
@@ -189,10 +186,22 @@ const formikOptions = {
       formikBag.resetForm,
       formikBag.setSubmitting
     );
-  }
+  };
+}
+
+FormRegistration.propTypes = {
+  setUser: PropTypes.func.isRequired
+};
+
+const mapStateToProps = state => ({
+  // notesList: notesList(state)
+});
+
+const mapDispatchToProps = {
+  setUser
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withFormik(formikOptions)(FormRegistration));
+)(FormRegistration);

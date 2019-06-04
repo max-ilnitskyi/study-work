@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { withFormik, Form, Field } from 'formik';
+import { Formik, Form, Field } from 'formik';
 // import { NavLink } from 'react-router-dom';
 // import PropTypes from 'prop-types';
 
@@ -68,21 +68,35 @@ const SigninButton = styled.button`
 class FormSignin extends React.Component {
   render() {
     return (
-      <FormWrap>
-        <FieldsWrap>
-          <TextField type="text" name="login" placeholder="login" />
-          <TextField type="text" name="password" placeholder="password" />
-        </FieldsWrap>
+      <Formik
+        initialValues={{
+          login: '',
+          password: ''
+        }}
+        onSubmit={this.handleSubmit}
+      >
+        {props => (
+          <FormWrap>
+            <FieldsWrap>
+              <TextField type="text" name="login" placeholder="login" />
+              <TextField type="text" name="password" placeholder="password" />
+            </FieldsWrap>
 
-        <SigninButton type="submit" disabled={this.props.isSubmitting}>
-          Sign in
-        </SigninButton>
-        {/* <Text>
+            <SigninButton type="submit" disabled={this.props.isSubmitting}>
+              Sign in
+            </SigninButton>
+            {/* <Text>
           Or <StyledLink to={registrationLink.href}>sign up</StyledLink>
         </Text> */}
-      </FormWrap>
+          </FormWrap>
+        )}
+      </Formik>
     );
   }
+
+  handleSubmit = (values, formikBag) => {
+    // here will be handler
+  };
 }
 
 FormSignin.propTypes = {
@@ -97,17 +111,7 @@ const mapDispatchToProps = {
   // setUser
 };
 
-const formikOptions = {
-  mapPropsToValues: () => ({
-    login: '',
-    password: ''
-  }),
-  handleSubmit: (values, formikBag) => {
-    // here will be handler
-  }
-};
-
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withFormik(formikOptions)(FormSignin));
+)(FormSignin);

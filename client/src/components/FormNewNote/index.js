@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { withFormik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import PropTypes from 'prop-types';
 import * as yup from 'yup';
 
@@ -11,6 +11,8 @@ import constants from '../../constants';
 
 // import { notesList } from '../../store/notes/selectors';
 import { postNote } from '../../store/notes/actions';
+import { actions as messagesActions } from '../Messages';
+console.log(messagesActions);
 
 // [ Styled Components >>>>>>>
 const StyledForm = styled(Form)`
@@ -105,63 +107,124 @@ const LoadingWrap = styled.div`
   margin-top: 10px;
 `;
 // <<<<<<< Styled Components ]
+const yupSchema = yup.object().shape({
+  text: yup
+    .string()
+    .min(3, 'Need more!')
+    .required('Text is required!'),
+  title: yup
+    .string()
+    .min(3, 'Need more!')
+    .required('Title is required!')
+});
 
 class FormNewNote extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      status: null,
+      message: null
+    };
+  }
+
   render() {
     console.log(this.props); //temp
     return (
-      <StyledForm>
-        <Title>Create new note:</Title>
-        <FormLine>
-          <Label htmlFor="FormNewNote.title">Title: </Label>
-          <TextField type="text" name="title" id="FormNewNote.title" />
-          <StyledError name="title" /> {/* temp */}
-        </FormLine>
+      <Formik
+        initialValues={{
+          title: '',
+          text: '',
+          color: constants.styles.PRIMARY_COLOR // must be the same as checked
+        }}
+        validationSchema={yupSchema}
+        onSubmit={this.handleSubmit}
+      >
+        {props => (
+          <StyledForm>
+            <Title>Create new note:</Title>
+            <FormLine>
+              <Label htmlFor="FormNewNote.title">Title: </Label>
+              <TextField type="text" name="title" id="FormNewNote.title" />
+              <StyledError name="title" /> {/* temp */}
+            </FormLine>
 
-        <FormLine>
-          <FakeLabel>Color:</FakeLabel>
+            <FormLine>
+              <FakeLabel>Color:</FakeLabel>
 
-          <ChooseColor
-            name="color"
-            id="FormNewNote.color.default"
-            value={constants.styles.PRIMARY_COLOR} // must be the same as default
-            checked={this.props.values.color === constants.styles.PRIMARY_COLOR}
-          />
-          <ChooseColorLabel htmlFor="FormNewNote.color.default" />
+              <ChooseColor
+                name="color"
+                id="FormNewNote.color.default"
+                value={constants.styles.PRIMARY_COLOR} // must be the same as default
+                checked={props.values.color === constants.styles.PRIMARY_COLOR}
+              />
+              <ChooseColorLabel htmlFor="FormNewNote.color.default" />
 
-          <ChooseColor name="color" id="FormNewNote.color.red" value="red" />
-          <ChooseColorLabel htmlFor="FormNewNote.color.red" />
+              <ChooseColor
+                name="color"
+                id="FormNewNote.color.red"
+                value="red"
+              />
+              <ChooseColorLabel htmlFor="FormNewNote.color.red" />
 
-          <ChooseColor
-            name="color"
-            id="FormNewNote.color.green"
-            value="green"
-          />
-          <ChooseColorLabel htmlFor="FormNewNote.color.green" />
+              <ChooseColor
+                name="color"
+                id="FormNewNote.color.green"
+                value="green"
+              />
+              <ChooseColorLabel htmlFor="FormNewNote.color.green" />
 
-          <ChooseColor name="color" id="FormNewNote.color.blue" value="blue" />
-          <ChooseColorLabel htmlFor="FormNewNote.color.blue" />
-        </FormLine>
-        <FormLine>
-          <Label htmlFor="FormNewNote.text">Text: </Label>
-          <TextArea name="text" id="FormNewNote.text" rows="5" />
-          <StyledError name="text" />
-        </FormLine>
-        <Button type="submit" disabled={this.props.isSubmitting}>
-          Post note!
-        </Button>
-        <Button style={{ marginLeft: '20px' }} type="reset">
-          reset?
-        </Button>
-        {this.props.isSubmitting && (
-          <LoadingWrap>
-            <Loading />
-          </LoadingWrap>
+              <ChooseColor
+                name="color"
+                id="FormNewNote.color.blue"
+                value="blue"
+              />
+              <ChooseColorLabel htmlFor="FormNewNote.color.blue" />
+            </FormLine>
+            <FormLine>
+              <Label htmlFor="FormNewNote.text">Text: </Label>
+              <TextArea name="text" id="FormNewNote.text" rows="5" />
+              <StyledError name="text" />
+            </FormLine>
+            <Button type="submit" disabled={props.isSubmitting}>
+              Post note!
+            </Button>
+            <Button style={{ marginLeft: '20px' }} type="reset">
+              reset?
+            </Button>
+            {props.isSubmitting && (
+              <LoadingWrap>
+                <Loading />
+              </LoadingWrap>
+            )}
+            {this.state.status && <p>{this.state.status}</p>}
+          </StyledForm>
         )}
-        <p>{this.props.status}</p>
-      </StyledForm>
+      </Formik>
     );
   }
+
+  handleSubmit = (values, formikBag) => {
+    this.props.postNote(
+      values,
+      () => {
+        this.setState({ status: 'Success' });
+        messagesActions.showMessage('You made new post!', 'success');
+        setTimeout(() => {
+          this.setState({ status: null });
+        }, 2000);
+        formikBag.resetForm();
+      },
+      () => {
+        this.setState({ status: 'Error' });
+        messagesActions.showMessage('An error has occurred.', 'error');
+        setTimeout(() => {
+          this.setState({ status: null });
+        }, 2000);
+        formikBag.setSubmitting(false);
+      }
+    );
+  };
 }
 
 FormNewNote.propTypes = {
@@ -175,43 +238,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   postNote
 };
-
-const yupSchema = yup.object().shape({
-  text: yup
-    .string()
-    .min(3, 'Need more!')
-    .required('Text is required!'),
-  title: yup
-    .string()
-    .min(3, 'Need more!')
-    .required('Title is required!')
-});
-
-const formikOptions = {
-  mapPropsToValues: () => ({
-    title: '',
-    text: '',
-    color: constants.styles.PRIMARY_COLOR // must be the same as checked
-  }),
-  validationSchema: yupSchema,
-  handleSubmit: (values, formikBag) => {
-    console.log('---test actions', formikBag);
-    console.log('---test data', values);
-    formikBag.props.postNote(
-      values,
-      () => {
-        formikBag.setStatus('success');
-        formikBag.resetForm();
-      },
-      () => {
-        formikBag.setStatus('error');
-        formikBag.setSubmitting(false);
-      }
-    );
-  }
-};
-
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withFormik(formikOptions)(FormNewNote));
+)(FormNewNote);
