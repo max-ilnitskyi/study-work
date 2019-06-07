@@ -2,10 +2,14 @@ import styled from 'styled-components';
 
 import constants from '../constants';
 
-const secondaryColor = constants.styles.SECONDARY_COLOR;
-const backgroundColor = '#fff';
+// const whiteColor = '#fff';
+// const greyColor = 'grey';
 
-const Button = styled.button`
+const Button = styled.button.attrs(props => ({
+  mainColor: props.color || constants.styles.SECONDARY_COLOR,
+  whiteColor: '#fff',
+  greyColor: 'grey'
+}))`
   display: block;
   padding-right: 10px;
   padding-left: 10px;
@@ -16,22 +20,25 @@ const Button = styled.button`
   line-height: 1.5;
   font-weight: 600;
   text-align: center;
-  color: ${constants.styles.SECONDARY_COLOR};
-  border: 2px solid ${constants.styles.SECONDARY_COLOR};
+  color: ${props => (props.outline ? props.mainColor : props.whiteColor)};
+  border: 2px solid ${props => props.mainColor};
   border-radius: 5px;
-  background-color: #fff;
+  background-color: ${props =>
+    props.outline ? props.whiteColor : props.mainColor};
 
   :hover {
     cursor: pointer;
-    color: #fff;
-    background-color: ${constants.styles.SECONDARY_COLOR};
+    color: ${props => (props.outline ? props.whiteColor : props.mainColor)};
+    background-color: ${props =>
+      props.outline ? props.mainColor : props.whiteColor};
   }
 
   :disabled {
     cursor: default;
-    background-color: #fff;
-    color: grey;
-    border: 2px solid grey;
-  }
+    background-color: ${props =>
+      props.outline ? props.whiteColor : props.greyColor};
+    color: ${props => (props.outline ? props.greyColor : props.whiteColor)};
+    border: 2px solid ${props => props.greyColor};
+
 `;
 export default Button;

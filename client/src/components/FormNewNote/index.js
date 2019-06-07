@@ -163,7 +163,7 @@ class FormNewNote extends React.Component {
               <StyledError name="text" />
             </FormLine>
             <ButtonsWrap>
-              <Button type="submit" disabled={props.isSubmitting}>
+              <Button outline type="submit" disabled={props.isSubmitting}>
                 Post note!
                 {props.isSubmitting && (
                   <LoadingWrap>
@@ -171,7 +171,7 @@ class FormNewNote extends React.Component {
                   </LoadingWrap>
                 )}
               </Button>
-              <Button type="reset" view="outline">
+              <Button type="reset" outline>
                 reset?
               </Button>
             </ButtonsWrap>
