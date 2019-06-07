@@ -2,6 +2,8 @@ import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import PropTypes from 'prop-types';
 
+import Loading from '../Loading';
+
 import constants from '../../constants';
 
 const show = keyframes`
@@ -50,9 +52,18 @@ const DeleteButton = styled.button`
   }
 `;
 
-const NoteTitle = styled.h3``;
+const NoteTitle = styled.h3`
+  ${'' /* here must be styles */}
+`;
 
-const NoteText = styled.p``;
+const NoteText = styled.p`
+  ${'' /* here must be styles */}
+`;
+
+const LoadingWrap = styled.div`
+  display: inline-block;
+  width: 16px;
+`;
 
 class Note extends React.Component {
   render() {
@@ -60,6 +71,11 @@ class Note extends React.Component {
       <NoteWrap color={this.props.color}>
         <DeleteButton type="button" onClick={this.handleDeleteButtonClick}>
           delete
+          {this.props.isWaitingDeleteResponse && (
+            <LoadingWrap>
+              <Loading />
+            </LoadingWrap>
+          )}
         </DeleteButton>
         <NoteTitle>{this.props.title}</NoteTitle>
         <NoteText>{this.props.text}</NoteText>
@@ -79,7 +95,8 @@ Note.propTypes = {
     _id: PropTypes.string.isRequired,
     color: PropTypes.string
   }),
-  deleteNote: PropTypes.func.isRequired
+  deleteNote: PropTypes.func.isRequired,
+  isWaitingDeleteResponse: PropTypes.bool
 };
 
 export default Note;

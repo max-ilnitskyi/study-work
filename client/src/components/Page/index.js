@@ -6,7 +6,7 @@ import Footer from '../Footer';
 import Main from '../Main';
 
 const StyledPage = styled.div`
-  height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
 `;

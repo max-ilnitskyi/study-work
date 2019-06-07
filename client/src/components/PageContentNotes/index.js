@@ -6,11 +6,11 @@ import { Helmet } from 'react-helmet';
 
 import PageContentWrap from '../PageContentWrap';
 import FormNewNote from '../FormNewNote';
+import Note from './Note';
 
 import { notesList } from '../../store/notes/selectors';
 import { fetchNotes, deleteNote } from '../../store/notes/actions';
-
-import Note from './Note';
+import { actions as messagesActions } from '../Messages';
 
 const NotesList = styled.div`
   ${'' /* here must be styles */}
@@ -28,6 +28,14 @@ const NewNoteFormWrap = styled.div`
 `;
 
 class PageContentNotes extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      notesWaitingDeleteResponse: {}
+    };
+  }
+
   render() {
     return (
       <PageContentWrap>
@@ -37,7 +45,13 @@ class PageContentNotes extends React.Component {
         <NotesList>
           {this.props.notesList.map(note => (
             <NotesListItem key={note._id}>
-              <Note {...note} deleteNote={this.deleteNote} />
+              <Note
+                {...note}
+                deleteNote={this.deleteNote}
+                isWaitingDeleteResponse={
+                  this.state.notesWaitingDeleteResponse[note._id]
+                }
+              />
             </NotesListItem>
           ))}
         </NotesList>
@@ -53,7 +67,37 @@ class PageContentNotes extends React.Component {
   }
 
   deleteNote = noteId => {
-    this.props.deleteNote(noteId);
+    this.setState({
+      notesWaitingDeleteResponse: {
+        ...this.state.notesWaitingDeleteResponse,
+        [noteId]: true
+      }
+    });
+
+    this.props.deleteNote(
+      noteId,
+      () => {
+        messagesActions.showMessage(
+          'You have successfully deleted the note!',
+          'success'
+        );
+        this.setState({
+          notesWaitingDeleteResponse: {
+            ...this.state.notesWaitingDeleteResponse,
+            [noteId]: false
+          }
+        });
+      },
+      () => {
+        messagesActions.showMessage('The note has not been deleted', 'error');
+        this.setState({
+          notesWaitingDeleteResponse: {
+            ...this.state.notesWaitingDeleteResponse,
+            [noteId]: false
+          }
+        });
+      }
+    );
   };
 }
 

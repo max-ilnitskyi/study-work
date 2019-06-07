@@ -5,6 +5,8 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import PropTypes from 'prop-types';
 import * as yup from 'yup';
 
+import Button from '../Button';
+
 import constants from '../../constants';
 
 // import { notesList } from '../../store/notes/selectors';
@@ -61,29 +63,10 @@ const FormLine = styled.div`
   }
 `;
 
-const Button = styled.button`
-  display: inline-block;
+const ButtonsWrap = styled.div`
+  display: flex;
+  justify-content: space-between;
   margin-top: 10px;
-
-  font-size: 20px;
-  font-weight: 600;
-  color: ${constants.styles.SECONDARY_COLOR};
-  border: 2px solid ${constants.styles.SECONDARY_COLOR};
-  border-radius: 3px;
-  background-color: #fff;
-
-  :hover {
-    cursor: pointer;
-    color: #fff;
-    background-color: ${constants.styles.SECONDARY_COLOR};
-  }
-
-  :disabled {
-    cursor: default;
-    background-color: #fff;
-    color: grey;
-    border: 2px solid grey;
-  }
 `;
 
 const Title = styled.h3`
@@ -166,12 +149,14 @@ class FormRegistration extends React.Component {
               <StyledError name="accept" />
             </FormLine>
 
-            <Button type="submit" disabled={this.props.isSubmitting}>
-              Registrate new user!
-            </Button>
-            <Button style={{ marginLeft: '20px' }} type="reset">
-              reset?
-            </Button>
+            <ButtonsWrap>
+              <Button type="submit" disabled={this.props.isSubmitting}>
+                Registrate new user!
+              </Button>
+              <Button style={{ marginLeft: '20px' }} type="reset">
+                reset?
+              </Button>
+            </ButtonsWrap>
           </FormWrap>
         )}
       </Formik>

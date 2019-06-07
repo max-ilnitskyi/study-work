@@ -6,13 +6,13 @@ import PropTypes from 'prop-types';
 import * as yup from 'yup';
 
 import Loading from '../Loading';
+import Button from '../Button';
 
 import constants from '../../constants';
+import { newNoteColorsList as colorsList } from '../../data';
 
-// import { notesList } from '../../store/notes/selectors';
 import { postNote } from '../../store/notes/actions';
 import { actions as messagesActions } from '../Messages';
-console.log(messagesActions);
 
 // [ Styled Components >>>>>>>
 const StyledForm = styled(Form)`
@@ -34,20 +34,28 @@ const TextField = styled(Field)`
   ${'' /* here must be styles */}
 `;
 
+const ColorsList = styled.ul`
+  display: inline-block;
+`;
+
+const ColorsListItem = styled.li`
+  display: inline-block;
+  margin-left: 5px;
+`;
+
 const ChooseColorLabel = styled.label`
   display: inline-block;
   width: 20px;
   height: 20px;
-  margin-left: 5px;
 
   border-radius: 50%;
+  cursor: pointer;
 `;
 
 const ChooseColor = styled(Field).attrs({ type: 'radio' })`
   display: none;
 
   & + ${ChooseColorLabel} {
-    background-color: grey;
     background-color: ${props => props.value};
   }
 
@@ -73,29 +81,10 @@ const FormLine = styled.div`
   }
 `;
 
-const Button = styled.button`
-  display: inline-block;
+const ButtonsWrap = styled.div`
+  display: flex;
+  justify-content: space-between;
   margin-top: 10px;
-
-  font-size: 20px;
-  font-weight: 600;
-  color: ${constants.styles.SECONDARY_COLOR};
-  border: 2px solid ${constants.styles.SECONDARY_COLOR};
-  border-radius: 3px;
-  background-color: #fff;
-
-  :hover {
-    cursor: pointer;
-    color: #fff;
-    background-color: ${constants.styles.SECONDARY_COLOR};
-  }
-
-  :disabled {
-    cursor: default;
-    background-color: #fff;
-    color: grey;
-    border: 2px solid grey;
-  }
 `;
 
 const Title = styled.h3`
@@ -103,9 +92,10 @@ const Title = styled.h3`
 `;
 
 const LoadingWrap = styled.div`
-  width: 100px;
-  margin-top: 10px;
+  display: inline-block;
+  width: 20px;
 `;
+
 // <<<<<<< Styled Components ]
 const yupSchema = yup.object().shape({
   text: yup
@@ -119,15 +109,6 @@ const yupSchema = yup.object().shape({
 });
 
 class FormNewNote extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      status: null,
-      message: null
-    };
-  }
-
   render() {
     console.log(this.props); //temp
     return (
@@ -151,53 +132,49 @@ class FormNewNote extends React.Component {
 
             <FormLine>
               <FakeLabel>Color:</FakeLabel>
+              <ColorsList>
+                <ColorsListItem>
+                  <ChooseColor
+                    name="color"
+                    id="FormNewNote.color.default"
+                    value={constants.styles.PRIMARY_COLOR} // must be the same as initialValues
+                    checked={
+                      props.values.color === constants.styles.PRIMARY_COLOR
+                    }
+                  />
+                  <ChooseColorLabel htmlFor="FormNewNote.color.default" />
+                </ColorsListItem>
 
-              <ChooseColor
-                name="color"
-                id="FormNewNote.color.default"
-                value={constants.styles.PRIMARY_COLOR} // must be the same as default
-                checked={props.values.color === constants.styles.PRIMARY_COLOR}
-              />
-              <ChooseColorLabel htmlFor="FormNewNote.color.default" />
-
-              <ChooseColor
-                name="color"
-                id="FormNewNote.color.red"
-                value="red"
-              />
-              <ChooseColorLabel htmlFor="FormNewNote.color.red" />
-
-              <ChooseColor
-                name="color"
-                id="FormNewNote.color.green"
-                value="green"
-              />
-              <ChooseColorLabel htmlFor="FormNewNote.color.green" />
-
-              <ChooseColor
-                name="color"
-                id="FormNewNote.color.blue"
-                value="blue"
-              />
-              <ChooseColorLabel htmlFor="FormNewNote.color.blue" />
+                {colorsList.map(color => (
+                  <ColorsListItem key={color}>
+                    <ChooseColor
+                      name="color"
+                      id={`FormNewNote.color.${color}`}
+                      value={color}
+                    />
+                    <ChooseColorLabel htmlFor={`FormNewNote.color.${color}`} />
+                  </ColorsListItem>
+                ))}
+              </ColorsList>
             </FormLine>
             <FormLine>
               <Label htmlFor="FormNewNote.text">Text: </Label>
               <TextArea name="text" id="FormNewNote.text" rows="5" />
               <StyledError name="text" />
             </FormLine>
-            <Button type="submit" disabled={props.isSubmitting}>
-              Post note!
-            </Button>
-            <Button style={{ marginLeft: '20px' }} type="reset">
-              reset?
-            </Button>
-            {props.isSubmitting && (
-              <LoadingWrap>
-                <Loading />
-              </LoadingWrap>
-            )}
-            {this.state.status && <p>{this.state.status}</p>}
+            <ButtonsWrap>
+              <Button type="submit" disabled={props.isSubmitting}>
+                Post note!
+                {props.isSubmitting && (
+                  <LoadingWrap>
+                    <Loading />
+                  </LoadingWrap>
+                )}
+              </Button>
+              <Button type="reset" view="outline">
+                reset?
+              </Button>
+            </ButtonsWrap>
           </StyledForm>
         )}
       </Formik>
@@ -208,19 +185,11 @@ class FormNewNote extends React.Component {
     this.props.postNote(
       values,
       () => {
-        this.setState({ status: 'Success' });
         messagesActions.showMessage('You made new post!', 'success');
-        setTimeout(() => {
-          this.setState({ status: null });
-        }, 2000);
         formikBag.resetForm();
       },
       () => {
-        this.setState({ status: 'Error' });
         messagesActions.showMessage('An error has occurred.', 'error');
-        setTimeout(() => {
-          this.setState({ status: null });
-        }, 2000);
         formikBag.setSubmitting(false);
       }
     );
@@ -232,12 +201,13 @@ FormNewNote.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  // notesList: notesList(state)
+  // here must be selectors, like [prop]: [selector](state);
 });
 
 const mapDispatchToProps = {
   postNote
 };
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps

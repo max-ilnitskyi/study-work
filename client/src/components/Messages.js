@@ -54,6 +54,29 @@ const Message = styled.p`
   animation: ${show} 0.5s ease;
 `;
 
+const HideAll = styled.button`
+  z-index: 100;
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  padding: 5px;
+
+  cursor: pointer;
+  opacity: 0.5;
+  background-color: rgba(255, 255, 255, 0.5);
+  box-shadow: -1px 1px 3px rgba(0, 0, 0, 0.3);
+  border: none;
+  border-radius: 5px;
+
+  &:hover {
+    opacity: 1;
+  }
+`;
+
+const HideAllContainer = styled(Container)`
+  position: relative;
+`;
+
 let showMessage;
 
 class Messages extends React.Component {
@@ -63,6 +86,8 @@ class Messages extends React.Component {
     this.state = {
       messages: []
     };
+
+    showMessage = this.showMessage.bind(this); // concerns showMessage above
   }
 
   render() {
@@ -75,39 +100,50 @@ class Messages extends React.Component {
             </Container>
           </MessageWrap>
         ))}
+
+        {!this.state.messages.length || (
+          <HideAllContainer>
+            <HideAll onClick={this.handleHideAll}>hide all</HideAll>
+          </HideAllContainer>
+        )}
       </MessagesWrap>
     );
   }
 
   showMessage(text, type = 'inform') {
-    const messageId = getNewId();
     this.setState({
       messages: [
         ...this.state.messages,
         {
-          text: text + messageId,
+          text,
           type,
-          id: messageId
+          id: getNewId()
         }
       ]
     });
 
     setTimeout(() => {
-      this.deleteFirstMessage();
+      this.hideFirstMessage();
     }, MESSAGE_LIFE_TIME * 1000);
   }
 
   // must be used ONLY in this.showMessage
-  deleteFirstMessage() {
+  hideFirstMessage() {
     const restMessages = this.state.messages.slice(1);
     this.setState({
       messages: restMessages
     });
   }
 
-  componentDidMount() {
-    showMessage = this.showMessage.bind(this);
+  hideAllMessages() {
+    this.setState({
+      messages: []
+    });
   }
+
+  handleHideAll = () => {
+    this.hideAllMessages();
+  };
 }
 
 let nextId = 1;
@@ -115,8 +151,12 @@ function getNewId() {
   return nextId++;
 }
 
+new Messages();
+
 const actions = {
-  showMessage
+  showMessage: (...args) => {
+    showMessage(...args);
+  }
 };
 
 window.showMessage = (text, type) => showMessage(text, type);

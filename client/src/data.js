@@ -18,3 +18,5 @@ export const navLinks = [
   },
   registrationLink
 ];
+
+export const newNoteColorsList = ['red', 'green', 'blue', '#fc0aa7'];

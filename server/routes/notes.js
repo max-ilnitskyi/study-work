@@ -18,6 +18,13 @@ notesDb
 
 const router = new express.Router();
 
+// ***temp*** delay api response
+router.use((req, res, next) => {
+  setTimeout(() => {
+    next();
+  }, 1000);
+});
+
 // in case db not connected - send 500 status
 router.use((req, res, next) => {
   if (isNotesDbConnected) {

@@ -1,3 +1,12 @@
+// it is not necessary, but if not specyfy main container height will have problems
+// can be deleted if in Page height replaced to 100vh instead of 100%
+// (but on mobiles footer bad seen because of address in the top)
+html,
+body,
+#root {
+  height: 100%;
+}
+
 body {
   margin: 0;
 

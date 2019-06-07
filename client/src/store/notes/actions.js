@@ -1,4 +1,5 @@
 import constats from '../../constants';
+import fetchJSON from '../../utils/fetchJSON';
 
 // import store from '../index';
 // import { usersList } from './selectors';
@@ -10,73 +11,48 @@ export const setNotes = notes => ({
   payload: notes
 });
 
-export const fetchNotes = () => {
+export const fetchNotes = (onSuccess, onError) => {
   return dispatch => {
-    fetch(`/api/notes`, {
-      headers: {
-        Accept: 'application/json'
+    fetchJSON.get(
+      `/api/notes`,
+      notes => {
+        if (typeof onSuccess === 'function') onSuccess(notes);
+        dispatch(setNotes(notes));
+      },
+      err => {
+        if (typeof onError === 'function') onError(err);
       }
-    })
-      .then(response => {
-        console.log('---response fetchNotes1: ', response); //temp
-        if (!response.ok) {
-          throw new Error(`Response is not ok, status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(data => {
-        dispatch(setNotes(data));
-        console.log('---response fetchNotes2: ', data); //temp
-      })
-      .catch(err => {
-        if (process.env.NODE_ENV !== 'production')
-          console.log('---error fetchNotes: ', err);
-      });
+    );
   };
 };
 
-export const postNote = (note, onApiSuccess, onApiError) => {
+export const postNote = (note, onSuccess, onError) => {
   return dispatch => {
-    fetch(`/api/notes`, {
-      method: 'post',
-      body: JSON.stringify(note),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(response => {
-        console.log('---response postNote: ', response); //temp
-        if (!response.ok) {
-          throw new Error(`Response is not ok, status: ${response.status}`);
-        }
-
-        if (typeof onApiSuccess === 'function') onApiSuccess();
+    fetchJSON.post(
+      `/api/notes`,
+      note,
+      data => {
+        if (typeof onSuccess === 'function') onSuccess(data);
         dispatch(fetchNotes());
-      })
-      .catch(err => {
-        if (process.env.NODE_ENV !== 'production')
-          console.log('---error postNote: ', err);
-
-        if (typeof onApiError === 'function') onApiError();
-      });
+      },
+      err => {
+        if (typeof onError === 'function') onError(err);
+      }
+    );
   };
 };
 
-export const deleteNote = noteId => {
+export const deleteNote = (noteId, onSuccess, onError) => {
   return dispatch => {
-    fetch(`/api/notes/${noteId}`, {
-      method: 'delete'
-    })
-      .then(response => {
-        console.log('---response deleteNote: ', response); //temp
-        if (!response.ok) {
-          throw new Error(`Response is not ok, status: ${response.status}`);
-        }
+    fetchJSON.delete(
+      `/api/notes/${noteId}`,
+      data => {
+        if (typeof onSuccess === 'function') onSuccess(data);
         dispatch(fetchNotes());
-      })
-      .catch(err => {
-        if (process.env.NODE_ENV !== 'production')
-          console.log('---error deleteNote: ', err);
-      });
+      },
+      err => {
+        if (typeof onError === 'function') onError(err);
+      }
+    );
   };
 };

@@ -5,6 +5,8 @@ import { Formik, Form, Field } from 'formik';
 // import { NavLink } from 'react-router-dom';
 // import PropTypes from 'prop-types';
 
+import Button from '../Button';
+
 import constants from '../../constants';
 
 // import { registrationLink } from '../../data';
@@ -31,38 +33,14 @@ const FieldsWrap = styled.div`
   flex-grow: 0;
 `;
 
-const SigninButton = styled.button`
+const SigninButton = styled(Button)`
   flex-shrink: 0;
   flex-grow: 0;
 
-  font-size: 20px;
-  font-weight: 600;
-  color: ${constants.styles.SECONDARY_COLOR};
-  border: 2px solid ${constants.styles.SECONDARY_COLOR};
-  ${'' /* border-radius: 3px; */}
-  border-top-right-radius: 3px;
-  border-bottom-right-radius: 3px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
   background-color: #fff;
-
-  :hover {
-    cursor: pointer;
-    color: #fff;
-    background-color: ${constants.styles.SECONDARY_COLOR};
-  }
-
-  :disabled {
-    cursor: default;
-    background-color: #fff;
-    color: grey;
-    border: 2px solid grey;
-  }
 `;
-
-// const Text = styled.p`
-//   font-size: 14px;
-// `;
-//
-// const StyledLink = styled(NavLink)``;
 // <<<<<<< Styled Components ]
 
 class FormSignin extends React.Component {
@@ -85,9 +63,6 @@ class FormSignin extends React.Component {
             <SigninButton type="submit" disabled={this.props.isSubmitting}>
               Sign in
             </SigninButton>
-            {/* <Text>
-          Or <StyledLink to={registrationLink.href}>sign up</StyledLink>
-        </Text> */}
           </FormWrap>
         )}
       </Formik>
