@@ -8,11 +8,12 @@ import * as yup from 'yup';
 import Loading from '../Loading';
 import Button from '../Button';
 
+import { mixins } from '../../styles';
 import constants from '../../constants';
 import { newNoteColorsList as colorsList } from '../../data';
 
 import { postNote } from '../../store/notes/actions';
-import { actions as messagesActions } from '../Messages';
+import { messagesActions } from '../Messages';
 
 // [ Styled Components >>>>>>>
 const StyledForm = styled(Form)`
@@ -53,7 +54,7 @@ const ChooseColorLabel = styled.label`
 `;
 
 const ChooseColor = styled(Field).attrs({ type: 'radio' })`
-  display: none;
+  ${mixins.visuallyHidden}
 
   & + ${ChooseColorLabel} {
     background-color: ${props => props.value};
@@ -61,6 +62,10 @@ const ChooseColor = styled(Field).attrs({ type: 'radio' })`
 
   &:checked + ${ChooseColorLabel} {
     box-shadow: 0 0 0 2px white, 0 0 0 4px grey;
+  }
+
+  &:focus + ${ChooseColorLabel} {
+    box-shadow: 0 0 0 4px grey;
   }
 `;
 
@@ -98,19 +103,11 @@ const LoadingWrap = styled.div`
 
 // <<<<<<< Styled Components ]
 const yupSchema = yup.object().shape({
-  text: yup
-    .string()
-    .min(3, 'Need more!')
-    .required('Text is required!'),
-  title: yup
-    .string()
-    .min(3, 'Need more!')
-    .required('Title is required!')
+  text: yup.string().required('Text is required!')
 });
 
 class FormNewNote extends React.Component {
   render() {
-    console.log(this.props); //temp
     return (
       <Formik
         initialValues={{

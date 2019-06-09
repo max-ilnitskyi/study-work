@@ -4,7 +4,7 @@ import styled, { keyframes } from 'styled-components';
 
 import Container from './Container';
 
-const MESSAGE_LIFE_TIME = 5;
+const MESSAGE_LIFE_TIME = 3;
 
 const show = keyframes`
   from {
@@ -37,21 +37,25 @@ const MessagesWrap = styled.div`
   width: 100%;
 `;
 
-const MessageWrap = styled.div`
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
-  background-color: rgba(218, 233, 239, 0.9);
-
-  animation: ${hide} 0.5s ${MESSAGE_LIFE_TIME - 0.5 + 's'} ease;
-`;
-
 const Message = styled.p`
   padding: 15px;
+`;
 
-  color: #000;
-  color: ${props =>
-    (props.type === 'success' && '#050') || (props.type === 'error' && '#500')};
+const MessageWrap = styled.div`
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+  ${'' /* background-color: rgba(218, 233, 239, 0.9); */}
+  background-color: rgba(230, 230, 230, 0.9);
+  background-color: ${props =>
+    (props.type === 'success' && 'rgba(218, 233, 239, 0.9)') ||
+    (props.type === 'error' && 'rgba(239, 233, 218, 0.9)')};
+  & ${Message} {
+    color: #000;
+    color: ${props =>
+      (props.type === 'success' && '#050') ||
+      (props.type === 'error' && '#500')};
+  }
 
-  animation: ${show} 0.5s ease;
+  animation: ${hide} 0.5s ${MESSAGE_LIFE_TIME - 0.5 + 's'} ease;
 `;
 
 const HideAll = styled.button`
@@ -77,6 +81,7 @@ const HideAllContainer = styled(Container)`
   position: relative;
 `;
 
+// for future exports
 let showMessage;
 
 class Messages extends React.Component {
@@ -94,7 +99,7 @@ class Messages extends React.Component {
     return (
       <MessagesWrap>
         {this.state.messages.map(({ text, type, id }) => (
-          <MessageWrap key={id}>
+          <MessageWrap key={id} type={type}>
             <Container>
               <Message type={type}>{text}</Message>
             </Container>
@@ -111,31 +116,44 @@ class Messages extends React.Component {
   }
 
   showMessage(text, type = 'inform') {
+    const id = getNewId();
+
+    const hideTimeout = setTimeout(() => {
+      this.hideMessage(id);
+    }, MESSAGE_LIFE_TIME * 1000);
+
     this.setState({
       messages: [
         ...this.state.messages,
         {
           text,
           type,
-          id: getNewId()
+          hideTimeout,
+          id
         }
       ]
     });
-
-    setTimeout(() => {
-      this.hideFirstMessage();
-    }, MESSAGE_LIFE_TIME * 1000);
   }
 
-  // must be used ONLY in this.showMessage
-  hideFirstMessage() {
-    const restMessages = this.state.messages.slice(1);
-    this.setState({
-      messages: restMessages
-    });
+  hideMessage(id) {
+    const messages = [...this.state.messages];
+    const targetIndex = messages.findIndex(message => message.id === id);
+
+    if (targetIndex !== -1) {
+      messages.splice(targetIndex, 1);
+      this.setState({
+        messages
+      });
+    } else {
+      console.log('--- message not found, can not delete, id: ', id); //temp
+    }
   }
 
   hideAllMessages() {
+    this.state.messages.forEach(message => {
+      clearTimeout(message.hideTimeout);
+    });
+
     this.setState({
       messages: []
     });
@@ -151,15 +169,13 @@ function getNewId() {
   return nextId++;
 }
 
-new Messages();
-
-const actions = {
+const messagesActions = {
   showMessage: (...args) => {
     showMessage(...args);
   }
 };
 
-window.showMessage = (text, type) => showMessage(text, type);
+window.showMessage = (text, type) => showMessage(text, type); //temp
 
 export default Messages;
-export { actions };
+export { messagesActions };

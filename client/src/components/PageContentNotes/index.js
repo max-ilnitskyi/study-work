@@ -10,7 +10,7 @@ import Note from './Note';
 
 import { notesList } from '../../store/notes/selectors';
 import { fetchNotes, deleteNote } from '../../store/notes/actions';
-import { actions as messagesActions } from '../Messages';
+import { messagesActions } from '../Messages';
 
 const NotesList = styled.div`
   ${'' /* here must be styles */}

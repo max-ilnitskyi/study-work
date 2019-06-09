@@ -20,9 +20,9 @@ const Button = styled.button.attrs(props => ({
   line-height: 1.5;
   font-weight: 600;
   text-align: center;
+  border-radius: 5px;
   color: ${props => (props.outline ? props.mainColor : props.whiteColor)};
   border: 2px solid ${props => props.mainColor};
-  border-radius: 5px;
   background-color: ${props =>
     props.outline ? props.whiteColor : props.mainColor};
 
@@ -39,6 +39,6 @@ const Button = styled.button.attrs(props => ({
       props.outline ? props.whiteColor : props.greyColor};
     color: ${props => (props.outline ? props.greyColor : props.whiteColor)};
     border: 2px solid ${props => props.greyColor};
-
+  }
 `;
 export default Button;

@@ -5,6 +5,7 @@ import { Helmet } from 'react-helmet';
 
 import store from './store';
 
+import { GlobalStyle } from './styles';
 import Page from './components/Page';
 import PageContentMain from './components/PageContentMain';
 import PageContentAbout from './components/PageContentAbout';
@@ -22,6 +23,7 @@ class App extends React.Component {
             <Helmet>
               <title>Study work</title>
             </Helmet>
+            <GlobalStyle />
             <Switch>
               <Route exact path="/" component={PageContentMain} />
               <Route path="/about" component={PageContentAbout} />

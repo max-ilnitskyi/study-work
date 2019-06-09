@@ -39,7 +39,6 @@ const SigninButton = styled(Button)`
 
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
-  background-color: #fff;
 `;
 // <<<<<<< Styled Components ]
 

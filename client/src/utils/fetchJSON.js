@@ -1,3 +1,6 @@
+const needLogs = process.env.NODE_ENV !== 'production';
+// const needLogs = false;
+
 const get = (url, onSuccess, onError) => {
   fetch(url, {
     headers: {
@@ -5,8 +8,7 @@ const get = (url, onSuccess, onError) => {
     }
   })
     .then(response => {
-      if (process.env.NODE_ENV !== 'production')
-        console.log('---response fetchJSON post(1): ', response); //temp?
+      if (needLogs) console.log('---response fetchJSON get(1): ', response); //temp?
 
       if (!response.ok) {
         throw new Error(`Response is not ok, status: ${response.status}`);
@@ -15,14 +17,12 @@ const get = (url, onSuccess, onError) => {
       return response.json();
     })
     .then(data => {
-      if (process.env.NODE_ENV !== 'production')
-        console.log('---response fetchJSON post(2): ', data); //temp?
+      if (needLogs) console.log('---response fetchJSON get(2): ', data); //temp?
 
       if (typeof onSuccess === 'function') onSuccess(data);
     })
     .catch(err => {
-      if (process.env.NODE_ENV !== 'production')
-        console.log('---error fetchNotes: ', err);
+      if (needLogs) console.log('---error fetchNotes: ', err);
 
       if (typeof onError === 'function') onError(err);
     });
@@ -45,8 +45,7 @@ const post = (url, data, onSuccess, onError) => {
     }
   })
     .then(response => {
-      if (process.env.NODE_ENV !== 'production')
-        console.log('---response fetchJSON post: ', response); //temp?
+      if (needLogs) console.log('---response fetchJSON post: ', response); //temp?
 
       if (!response.ok) {
         throw new Error(`Response is not ok, status: ${response.status}`);
@@ -55,8 +54,7 @@ const post = (url, data, onSuccess, onError) => {
       if (typeof onSuccess === 'function') onSuccess(response);
     })
     .catch(err => {
-      if (process.env.NODE_ENV !== 'production')
-        console.log('---error fetchJSON post: ', err); //temp?
+      if (needLogs) console.log('---error fetchJSON post: ', err); //temp?
 
       if (typeof onError === 'function') onError(err);
     });
@@ -67,8 +65,7 @@ const deleteData = (url, onSuccess, onError) => {
     method: 'delete'
   })
     .then(response => {
-      if (process.env.NODE_ENV !== 'production')
-        console.log('---response fetchJSON delete: ', response); //temp?
+      if (needLogs) console.log('---response fetchJSON delete: ', response); //temp?
 
       if (!response.ok) {
         throw new Error(`Response is not ok, status: ${response.status}`);
@@ -77,8 +74,7 @@ const deleteData = (url, onSuccess, onError) => {
       if (typeof onSuccess === 'function') onSuccess(response);
     })
     .catch(err => {
-      if (process.env.NODE_ENV !== 'production')
-        console.log('---error fetchJSON delete: ', err); //temp?
+      if (needLogs) console.log('---error fetchJSON delete: ', err); //temp?
 
       if (typeof onError === 'function') onError(err);
     });
