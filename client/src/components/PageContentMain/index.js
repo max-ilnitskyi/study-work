@@ -3,14 +3,13 @@ import React from 'react';
 
 import PageContentWrap from '../PageContentWrap';
 
+import { pageTextMain as pageText } from '../../data';
+
 class PageContentMain extends React.Component {
   render() {
     return (
       <PageContentWrap>
-        <p>
-          This is my super-duper node.js/express/mongodb/react/redux...
-          application!!!
-        </p>
+        <p>{pageText}</p>
       </PageContentWrap>
     );
   }

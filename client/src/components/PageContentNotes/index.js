@@ -11,6 +11,11 @@ import Note from './Note';
 import { notesList } from '../../store/notes/selectors';
 import { fetchNotes, deleteNote } from '../../store/notes/actions';
 import { messagesActions } from '../Messages';
+import {
+  headTitleNotes as headTitle,
+  deleteNoteRequestSuccessText,
+  deleteNoteRequestErrorText
+} from '../../data';
 
 const NotesList = styled.div`
   ${'' /* here must be styles */}
@@ -40,7 +45,7 @@ class PageContentNotes extends React.Component {
     return (
       <PageContentWrap>
         <Helmet>
-          <title>Notes - Study work</title>
+          <title>{headTitle}</title>
         </Helmet>
         <NotesList>
           {this.props.notesList.map(note => (
@@ -77,7 +82,7 @@ class PageContentNotes extends React.Component {
     this.props.deleteNote(
       noteId,
       () => {
-        messagesActions.showSuccess('You have successfully deleted the note!');
+        messagesActions.showSuccess(deleteNoteRequestSuccessText);
         this.setState({
           notesWaitingDeleteResponse: {
             ...this.state.notesWaitingDeleteResponse,
@@ -86,7 +91,7 @@ class PageContentNotes extends React.Component {
         });
       },
       () => {
-        messagesActions.showError('The note has not been deleted');
+        messagesActions.showError(deleteNoteRequestErrorText);
         this.setState({
           notesWaitingDeleteResponse: {
             ...this.state.notesWaitingDeleteResponse,

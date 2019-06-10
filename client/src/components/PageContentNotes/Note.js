@@ -37,6 +37,7 @@ const DeleteButton = styled.button`
   font-size: 16px;
   line-height: 1;
   font-weight: 600;
+  color: #000;
   background-color: #fff;
   background-color: rgba(255, 0, 0, 0.3);
   border-radius: 3px;
@@ -49,6 +50,12 @@ const DeleteButton = styled.button`
 
   ${NoteWrap}:hover & {
     opacity: 1;
+  }
+
+  &:disabled {
+    color: #333;
+    background-color: rgba(100, 100, 100, 0.3);
+    cursor: default;
   }
 `;
 
@@ -69,7 +76,11 @@ class Note extends React.Component {
   render() {
     return (
       <NoteWrap color={this.props.color}>
-        <DeleteButton type="button" onClick={this.handleDeleteButtonClick}>
+        <DeleteButton
+          disabled={this.props.isWaitingDeleteResponse}
+          type="button"
+          onClick={this.handleDeleteButtonClick}
+        >
           delete
           {this.props.isWaitingDeleteResponse && (
             <LoadingWrap>

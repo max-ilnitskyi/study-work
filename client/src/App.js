@@ -3,9 +3,6 @@ import { Provider } from 'react-redux';
 import { Route, BrowserRouter, Switch } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 
-import store from './store';
-
-import { GlobalStyle } from './styles';
 import Page from './components/Page';
 import PageContentMain from './components/PageContentMain';
 import PageContentAbout from './components/PageContentAbout';
@@ -13,6 +10,10 @@ import PageContentNotes from './components/PageContentNotes';
 import PageRegistration from './components/PageRegistration';
 import NotFound from './components/NotFound';
 import Messages from './components/Messages';
+import { GlobalStyle } from './styles';
+
+import store from './store';
+import { headTitleMain as headTitle } from './data';
 
 class App extends React.Component {
   render() {
@@ -21,7 +22,7 @@ class App extends React.Component {
         <BrowserRouter>
           <Page>
             <Helmet>
-              <title>Study work</title>
+              <title>{headTitle}</title>
             </Helmet>
             <GlobalStyle />
             <Switch>

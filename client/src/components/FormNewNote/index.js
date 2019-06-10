@@ -13,7 +13,12 @@ import { messagesActions } from '../Messages';
 
 import { mixins } from '../../styles';
 import constants from '../../constants';
-import { newNoteColorsList as colorsList } from '../../data';
+import {
+  newNoteColorsList as colorsList,
+  newNoteTitle as mainTitle,
+  newNoteRequestSuccessText,
+  newNoteRequestErrorText
+} from '../../data';
 
 // [ Styled Components >>>>>>>
 const StyledForm = styled(Form)`
@@ -113,14 +118,14 @@ class FormNewNote extends React.Component {
         initialValues={{
           title: '',
           text: '',
-          color: constants.styles.PRIMARY_COLOR // must be the same as checked
+          color: colorsList[0]
         }}
         validationSchema={yupSchema}
         onSubmit={this.handleSubmit}
       >
         {props => (
           <StyledForm>
-            <Title>Create new note:</Title>
+            <Title>{mainTitle}</Title>
             <FormLine>
               <Label htmlFor="FormNewNote.title">Title: </Label>
               <TextField type="text" name="title" id="FormNewNote.title" />
@@ -130,28 +135,9 @@ class FormNewNote extends React.Component {
             <FormLine>
               <FakeLabel>Color:</FakeLabel>
               <ColorsList>
-                <ColorsListItem>
-                  <ChooseColor
-                    name="color"
-                    id="FormNewNote.color.default"
-                    value={constants.styles.PRIMARY_COLOR} // must be the same as initialValues
-                    checked={
-                      props.values.color === constants.styles.PRIMARY_COLOR
-                    }
-                  />
-                  <ChooseColorLabel htmlFor="FormNewNote.color.default" />
-                </ColorsListItem>
-
-                {colorsList.map(color => (
-                  <ColorsListItem key={color}>
-                    <ChooseColor
-                      name="color"
-                      id={`FormNewNote.color.${color}`}
-                      value={color}
-                    />
-                    <ChooseColorLabel htmlFor={`FormNewNote.color.${color}`} />
-                  </ColorsListItem>
-                ))}
+                {colorsList.map(color =>
+                  this.renderColorsListItem(color, props.values.color)
+                )}
               </ColorsList>
             </FormLine>
             <FormLine>
@@ -178,15 +164,29 @@ class FormNewNote extends React.Component {
     );
   }
 
+  renderColorsListItem(color, selectedColor) {
+    return (
+      <ColorsListItem key={color}>
+        <ChooseColor
+          name="color"
+          id={`FormNewNote.color.${color}`}
+          value={color}
+          checked={color === selectedColor}
+        />
+        <ChooseColorLabel htmlFor={`FormNewNote.color.${color}`} />
+      </ColorsListItem>
+    );
+  }
+
   handleSubmit = (values, formikBag) => {
     this.props.postNote(
       values,
       () => {
-        messagesActions.showSuccess('You made new post!');
+        messagesActions.showSuccess(newNoteRequestSuccessText);
         formikBag.resetForm();
       },
       () => {
-        messagesActions.showError('An error has occurred.');
+        messagesActions.showError(newNoteRequestErrorText);
         formikBag.setSubmitting(false);
       }
     );

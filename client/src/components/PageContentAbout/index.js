@@ -4,14 +4,19 @@ import { Helmet } from 'react-helmet';
 
 import PageContentWrap from '../PageContentWrap';
 
+import {
+  headTitleAbout as pageTitle,
+  pageTextAbout as pageText
+} from '../../data';
+
 class PageContentAbout extends React.Component {
   render() {
     return (
       <PageContentWrap>
         <Helmet>
-          <title>About - Study work</title>
+          <title>{pageTitle}</title>
         </Helmet>
-        <p>This application awesome</p>
+        <p>{pageText}</p>
       </PageContentWrap>
     );
   }
