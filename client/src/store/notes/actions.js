@@ -1,9 +1,6 @@
 import constats from '../../constants';
 import fetchJSON from '../../utils/fetchJSON';
 
-// import store from '../index';
-// import { usersList } from './selectors';
-
 const { SET_NOTES } = constats.actionTypes;
 
 export const setNotes = notes => ({

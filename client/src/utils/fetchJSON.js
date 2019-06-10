@@ -41,7 +41,6 @@ const post = (url, data, onSuccess, onError) => {
     body: dataJSON,
     headers: {
       'Content-Type': 'application/json'
-      // Accept: 'application/json'
     }
   })
     .then(response => {
