@@ -19,21 +19,23 @@ const Button = styled.button.attrs(props => ({
   text-align: center;
   border-radius: 5px;
   cursor: pointer;
-  ${props => `
-  color: ${props.outline ? props.mainColor : props.whiteColor};
-  border: 2px solid ${props.mainColor};
-  background-color: ${props.outline ? props.whiteColor : props.mainColor};
+  transition: 0.1s;
+
+  ${({ outline, mainColor, whiteColor, greyColor }) => `
+  color: ${outline ? mainColor : whiteColor};
+  border: 2px solid ${mainColor};
+  background-color: ${outline ? whiteColor : mainColor};
 
   :hover {
-    color: ${props.outline ? props.whiteColor : props.mainColor};
-    background-color: ${props.outline ? props.mainColor : props.whiteColor};
+    color: ${outline ? whiteColor : mainColor};
+    background-color: ${outline ? mainColor : whiteColor};
   }
 
   :disabled {
     cursor: default;
-    background-color: ${props.outline ? props.whiteColor : props.greyColor};
-    color: ${props.outline ? props.greyColor : props.whiteColor};
-    border: 2px solid ${props.greyColor};
+    background-color: ${outline ? whiteColor : greyColor};
+    color: ${outline ? greyColor : whiteColor};
+    border: 2px solid ${greyColor};
   }`}
 `;
 

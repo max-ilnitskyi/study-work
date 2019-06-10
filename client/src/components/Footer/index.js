@@ -1,8 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import constants from '../../constants';
 import Container from '../Container';
+
+import constants from '../../constants';
 
 const FooterWrap = styled.div`
   flex-shrink: 0;
@@ -22,6 +23,7 @@ class Footer extends React.Component {
     return (
       <FooterWrap>
         <FooterContainer>
+          {/* temp */}
           <div> Hello! It's footer</div>
         </FooterContainer>
       </FooterWrap>

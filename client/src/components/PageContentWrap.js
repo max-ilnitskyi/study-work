@@ -2,7 +2,8 @@ import styled from 'styled-components';
 
 const PageContentWrap = styled.main`
   height: 100%;
-  padding: 15px;
+  padding-top: 20px;
+  padding-bottom: 20px;
 `;
 
 export default PageContentWrap;

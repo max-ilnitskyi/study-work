@@ -8,12 +8,12 @@ import * as yup from 'yup';
 import Loading from '../Loading';
 import Button from '../Button';
 
+import { postNote } from '../../store/notes/actions';
+import { messagesActions } from '../Messages';
+
 import { mixins } from '../../styles';
 import constants from '../../constants';
 import { newNoteColorsList as colorsList } from '../../data';
-
-import { postNote } from '../../store/notes/actions';
-import { messagesActions } from '../Messages';
 
 // [ Styled Components >>>>>>>
 const StyledForm = styled(Form)`
@@ -100,8 +100,8 @@ const LoadingWrap = styled.div`
   display: inline-block;
   width: 20px;
 `;
-
 // <<<<<<< Styled Components ]
+
 const yupSchema = yup.object().shape({
   text: yup.string().required('Text is required!')
 });
@@ -182,11 +182,11 @@ class FormNewNote extends React.Component {
     this.props.postNote(
       values,
       () => {
-        messagesActions.showMessage('You made new post!', 'success');
+        messagesActions.showSuccess('You made new post!');
         formikBag.resetForm();
       },
       () => {
-        messagesActions.showMessage('An error has occurred.', 'error');
+        messagesActions.showError('An error has occurred.');
         formikBag.setSubmitting(false);
       }
     );

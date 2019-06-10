@@ -77,10 +77,7 @@ class PageContentNotes extends React.Component {
     this.props.deleteNote(
       noteId,
       () => {
-        messagesActions.showMessage(
-          'You have successfully deleted the note!',
-          'success'
-        );
+        messagesActions.showSuccess('You have successfully deleted the note!');
         this.setState({
           notesWaitingDeleteResponse: {
             ...this.state.notesWaitingDeleteResponse,
@@ -89,7 +86,7 @@ class PageContentNotes extends React.Component {
         });
       },
       () => {
-        messagesActions.showMessage('The note has not been deleted', 'error');
+        messagesActions.showError('The note has not been deleted');
         this.setState({
           notesWaitingDeleteResponse: {
             ...this.state.notesWaitingDeleteResponse,

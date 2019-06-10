@@ -1,10 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import constants from '../../constants';
+import UserPanel from '../UserPanel';
 import Container from '../Container';
 import Nav from '../Nav';
-import UserPanel from '../UserPanel';
+
+import constants from '../../constants';
 
 const HeaderWrap = styled.div`
   flex-shrink: 0;
@@ -19,8 +20,6 @@ const HeaderContainer = styled(Container)`
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  padding-top: 15px;
-  padding-bottom: 15px;
 `;
 
 const HeaderNavWrap = styled.div`

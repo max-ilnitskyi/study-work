@@ -5,6 +5,8 @@ import styled, { keyframes } from 'styled-components';
 import Container from './Container';
 
 const MESSAGE_LIFE_TIME = 3;
+const SHOW_TRANSITION = 0.5;
+const HIDE_TRANSITION = 0.5;
 
 const show = keyframes`
   from {
@@ -43,7 +45,6 @@ const Message = styled.p`
 
 const MessageWrap = styled.div`
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
-  ${'' /* background-color: rgba(218, 233, 239, 0.9); */}
   background-color: rgba(230, 230, 230, 0.9);
   background-color: ${props =>
     (props.type === 'success' && 'rgba(218, 233, 239, 0.9)') ||
@@ -55,7 +56,9 @@ const MessageWrap = styled.div`
       (props.type === 'error' && '#500')};
   }
 
-  animation: ${hide} 0.5s ${MESSAGE_LIFE_TIME - 0.5 + 's'} ease;
+  animation: ${show} ${SHOW_TRANSITION + 's'} ease,
+    ${hide} ${HIDE_TRANSITION + 's'}
+      ${MESSAGE_LIFE_TIME - HIDE_TRANSITION + 's'} ease;
 `;
 
 const HideAll = styled.button`
@@ -82,7 +85,7 @@ const HideAllContainer = styled(Container)`
 `;
 
 // for future exports
-let showMessage;
+let showMessage, showSuccess, showError;
 
 class Messages extends React.Component {
   constructor(props) {
@@ -92,7 +95,10 @@ class Messages extends React.Component {
       messages: []
     };
 
-    showMessage = this.showMessage.bind(this); // concerns showMessage above
+    // bindings below for exports
+    showMessage = this.showMessage.bind(this);
+    showSuccess = this.showSuccess.bind(this);
+    showError = this.showError.bind(this);
   }
 
   render() {
@@ -135,6 +141,14 @@ class Messages extends React.Component {
     });
   }
 
+  showSuccess(text) {
+    this.showMessage(text, 'success');
+  }
+
+  showError(text) {
+    this.showMessage(text, 'error');
+  }
+
   hideMessage(id) {
     const messages = [...this.state.messages];
     const targetIndex = messages.findIndex(message => message.id === id);
@@ -172,10 +186,16 @@ function getNewId() {
 const messagesActions = {
   showMessage: (...args) => {
     showMessage(...args);
+  },
+  showSuccess: (...args) => {
+    showSuccess(...args);
+  },
+  showError: (...args) => {
+    showError(...args);
   }
 };
 
-window.showMessage = (text, type) => showMessage(text, type); //temp
+window.messagesActions = messagesActions; //temp
 
 export default Messages;
 export { messagesActions };
