@@ -1,6 +1,7 @@
 const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
+const compression = require('compression');
 
 const config = require('./config');
 const notesRouter = require('./routes/notes');
@@ -12,6 +13,8 @@ const app = express();
 
 // define port
 app.set('port', config.serverPort);
+
+app.use(compression());
 
 // Express only serves static assets in production
 if (process.env.NODE_ENV === 'production') {
