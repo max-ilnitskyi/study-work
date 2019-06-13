@@ -32,8 +32,8 @@ app.use(
   session({
     secret: config.secret,
     cookie: { maxAge: 60000 },
-    resave: false
-    // saveUninitialized: false
+    resave: false,
+    saveUninitialized: false
   })
 );
 
@@ -52,16 +52,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
 
-// test is [history fallback]? work / temp
-app.get('/hi', (req, res) => {
-  res.send('hi!!!');
-});
-// test is static work / temp
-app.get('/', (req, res) => {
-  res.send('hi index route!!!');
-});
-
-// connect nores router
+// connect notes router
 app.use('/api/notes', notesRouter);
 
 // try parody webpack dev server, always send index.html (if not resolved before)
@@ -75,7 +66,7 @@ if (process.env.NODE_ENV === 'production') {
 
 // wrong request
 app.use((req, res) => {
-  res.sendStatus(400);
+  res.sendStatus(404);
 });
 
 // TODO: make some normal logging
