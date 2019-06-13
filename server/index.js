@@ -2,6 +2,8 @@ const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const compression = require('compression');
+const logger = require('morgan');
+const session = require('express-session');
 
 const config = require('./config');
 const notesRouter = require('./routes/notes');
@@ -14,6 +16,10 @@ const app = express();
 // define port
 app.set('port', config.serverPort);
 
+// logging
+app.use(logger('dev'));
+
+// compression
 app.use(compression());
 
 // Express only serves static assets in production
@@ -21,13 +27,30 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, clientBuildPath)));
 }
 
-app.use(bodyParser.json());
+// session
+app.use(
+  session({
+    secret: config.secret,
+    cookie: { maxAge: 60000 },
+    resave: false
+    // saveUninitialized: false
+  })
+);
 
-// logging / temp
-app.use((req, res, next) => {
-  console.log(`Request receved from ${req.url}, method: ${req.method}`);
-  next();
+// temp check session
+app.get('/getsession', (req, res) => {
+  res.json({
+    id: req.session.id,
+    cookie: req.session.id,
+    secret: config.secret
+  });
 });
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+
+// parse application/json
+app.use(bodyParser.json());
 
 // test is [history fallback]? work / temp
 app.get('/hi', (req, res) => {

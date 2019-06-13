@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 
+import GetSession from '../GetSession'; //temp
 import PageContentWrap from '../PageContentWrap';
 import FormNewNote from '../FormNewNote';
 import Note from './Note';
@@ -63,6 +64,8 @@ class PageContentNotes extends React.Component {
         <NewNoteFormWrap>
           <FormNewNote />
         </NewNoteFormWrap>
+        {/* temp */}
+        <GetSession />
       </PageContentWrap>
     );
   }
