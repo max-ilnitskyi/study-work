@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const compression = require('compression');
 const logger = require('morgan');
 const session = require('express-session');
+const helmet = require('helmet');
 
 const config = require('./config');
 const notesRouter = require('./routes/notes');
@@ -12,15 +13,19 @@ const notesRouter = require('./routes/notes');
 const clientBuildPath = config.clientBuildPath;
 
 const app = express();
+app.disable('x-powered-by');
 
-// define port
-app.set('port', config.serverPort);
-
-// logging
 app.use(logger('dev'));
-
-// compression
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+// app.use(helmet());
 app.use(compression());
+
+// app.use(function(req, res, next) {
+//   res.removeHeader('X-Powered-By');
+//   // res.set('X-Powered-By', '');
+//   next();
+// });
 
 // Express only serves static assets in production
 if (process.env.NODE_ENV === 'production') {
@@ -46,25 +51,21 @@ app.get('/getsession', (req, res) => {
   });
 });
 
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }));
-
-// parse application/json
-app.use(bodyParser.json());
-
-// connect notes router
+// Connect notes router
 app.use('/api/notes', notesRouter);
 
-// try parody webpack dev server, always send index.html (if not resolved before)
+// If get request, always send index.html (if not resolved before)
 if (process.env.NODE_ENV === 'production') {
+  const indexPath = path.join(__dirname, clientBuildPath, 'index.html');
+
   app.get('*', (req, res, next) => {
     if (!req.accepts('html')) next();
 
-    res.sendFile(path.join(__dirname, clientBuildPath, 'index.html'));
+    res.sendFile(indexPath);
   });
 }
 
-// wrong request
+// Not found
 app.use((req, res) => {
   res.sendStatus(404);
 });
@@ -72,9 +73,9 @@ app.use((req, res) => {
 // TODO: make some normal logging
 // global errors handler
 app.use((error, req, res, next) => {
-  console.log(`-----some error: `, error);
+  console.log(`-----express error: `, error);
 });
 
-app.listen(app.get('port'), () => {
-  console.log(`Server running on port ${app.get('port')}`);
+app.listen(config.serverPort, () => {
+  console.log(`Server running on port ${config.serverPort}`);
 });
