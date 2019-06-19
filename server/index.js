@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const compression = require('compression');
 const logger = require('morgan');
+const helmet = require('helmet');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
@@ -18,8 +19,8 @@ const app = express();
 
 mongoConnection.startConnection(config.mongodbUri);
 
-app.disable('x-powered-by');
-
+// app.disable('x-powered-by');
+app.use(helmet());
 app.use(logger('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
