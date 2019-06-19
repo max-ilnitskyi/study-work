@@ -7,9 +7,9 @@
     "node": "10.16.0"
   },
   "scripts": {
-    "build": "cd client-new && npm i && npm run build",
+    "build": "cd client && npm i && npm run build",
     "start": "node server",
-    "client": "cd client-new && npm run start",
+    "client": "cd client && npm run start",
     "server": "nodemon server",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },

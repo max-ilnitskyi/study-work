@@ -1,5 +1,5 @@
 const config = {
-  clientBuildPath: '../client-new/build', // relative path to static files
+  clientBuildPath: '../client/build', // relative path to static files
   serverPort: process.env.PORT || '3001',
   mongodbUri: process.env.MONGODB_URI || `mongodb://localhost:27017/notes`,
   secret:
