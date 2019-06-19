@@ -3,29 +3,27 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const compression = require('compression');
 const logger = require('morgan');
+const mongoose = require('mongoose');
 const session = require('express-session');
-const helmet = require('helmet');
+const MongoStore = require('connect-mongo')(session);
 
 const config = require('./config');
 const notesRouter = require('./routes/notes');
+const mongoConnection = require('./utils/mongoConnection');
 
 // relative path to static files
 const clientBuildPath = config.clientBuildPath;
 
 const app = express();
+
+mongoConnection.startConnection(config.mongodbUri);
+
 app.disable('x-powered-by');
 
 app.use(logger('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-// app.use(helmet());
 app.use(compression());
-
-// app.use(function(req, res, next) {
-//   res.removeHeader('X-Powered-By');
-//   // res.set('X-Powered-By', '');
-//   next();
-// });
 
 // Express only serves static assets in production
 if (process.env.NODE_ENV === 'production') {
@@ -36,23 +34,31 @@ if (process.env.NODE_ENV === 'production') {
 app.use(
   session({
     secret: config.secret,
-    cookie: { maxAge: 60000 },
+    cookie: { maxAge: 60000 * 10 },
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    store: new MongoStore({ mongooseConnection: mongoose.connection })
   })
 );
 
 // temp check session
 app.get('/getsession', (req, res) => {
+  if (req.session.count == undefined) {
+    req.session.count = 1;
+  } else {
+    req.session.count += 1;
+  }
+
   res.json({
     id: req.session.id,
     cookie: req.session.id,
-    secret: config.secret
+    secret: config.secret,
+    count: req.session.count
   });
 });
 
 // Connect notes router
-app.use('/api/notes', notesRouter);
+app.use('/api/notes', mongoConnection.checkConnection, notesRouter);
 
 // If get request, always send index.html (if not resolved before)
 if (process.env.NODE_ENV === 'production') {
@@ -74,6 +80,8 @@ app.use((req, res) => {
 // global errors handler
 app.use((error, req, res, next) => {
   console.log(`-----express error: `, error);
+
+  res.sendStatus(500);
 });
 
 app.listen(config.serverPort, () => {

@@ -9,6 +9,4 @@ const NoteSchema = new Schema({
   createdAt: { type: Date }
 });
 
-const Note = mongoose.model('Note', NoteSchema);
-
-module.exports = Note;
+module.exports = mongoose.model('Note', NoteSchema);

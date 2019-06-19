@@ -3,37 +3,16 @@ const express = require('express');
 const notesDb = require('../controllers/notes');
 const config = require('../config');
 
-// TODO: consider breaking of connection
-let isNotesDbConnected = false;
-notesDb
-  .setUpConnection()
-  .then(res => {
-    isNotesDbConnected = true;
-    console.log('Notes db connection succeed, config uri: ', config.mongodbUri);
-  })
-  .catch(err => {
-    isNotesDbConnected = false;
-    console.log('Notes db connection error: ', err);
-  });
-
 const router = new express.Router();
 
-// ***temp*** delay api response
-router.use((req, res, next) => {
-  setTimeout(() => {
-    next();
-  }, 1000);
-});
+// // ***temp*** delay api response
+// router.use((req, res, next) => {
+//   setTimeout(() => {
+//     next();
+//   }, 1000);
+// });
 
-// in case db not connected - send 500 status
-router.use((req, res, next) => {
-  if (isNotesDbConnected) {
-    next();
-  } else {
-    res.sendStatus(500);
-  }
-});
-
+// send all notes
 router.get('/', (req, res) => {
   notesDb
     .listNotes()
@@ -41,6 +20,7 @@ router.get('/', (req, res) => {
     .catch(err => res.sendStatus(500));
 });
 
+// post new note
 router.post('/', (req, res) => {
   notesDb
     .createNotes(req.body)
@@ -48,6 +28,7 @@ router.post('/', (req, res) => {
     .catch(err => res.sendStatus(500));
 });
 
+// delete note by id
 router.delete('/:id', (req, res) => {
   notesDb
     .deleteNotes(req.params.id)
@@ -57,7 +38,7 @@ router.delete('/:id', (req, res) => {
 
 // wrong request
 router.use((req, res) => {
-  res.sendStatus(400);
+  res.sendStatus(404);
 });
 
 module.exports = router;
