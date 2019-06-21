@@ -9,7 +9,7 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 
 const config = require('./config');
-const notesRouter = require('./routes/notes');
+const routes = require('./routes');
 const mongoConnection = require('./utils/mongoConnection');
 
 // relative path to static files
@@ -59,7 +59,7 @@ app.get('/getsession', (req, res) => {
 });
 
 // Connect notes router
-app.use('/api/notes', mongoConnection.checkConnection, notesRouter);
+app.use('/api', mongoConnection.checkConnection, routes);
 
 // If get request, always send index.html (if not resolved before)
 if (process.env.NODE_ENV === 'production') {
