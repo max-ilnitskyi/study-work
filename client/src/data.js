@@ -10,6 +10,11 @@ export const registrationLink = {
   name: 'Sign up',
   href: '/registration'
 };
+
+export const loginLink = {
+  name: 'Login',
+  href: '/login'
+};
 export const navLinks = [
   {
     name: 'main',
@@ -23,6 +28,7 @@ export const navLinks = [
     name: 'about',
     href: '/about'
   },
+  loginLink,
   registrationLink
 ];
 

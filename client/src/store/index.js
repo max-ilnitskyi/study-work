@@ -3,6 +3,8 @@ import thunk from 'redux-thunk';
 
 import reducer from './reducers';
 
+import { fetchUser } from './user/actions';
+
 let middlewares = [thunk];
 
 // dinamic imports of middlewares in 'development' mode
@@ -23,5 +25,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const store = createStore(reducer, compose(...enhancers));
+
+store.dispatch(fetchUser());
 
 export default store;

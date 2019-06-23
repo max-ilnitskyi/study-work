@@ -3,26 +3,41 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import FormSignin from '../FormSignin';
+import FormSigninMini from '../FormSigninMini';
+import Button from '../Button';
 
 import { user } from '../../store/user/selectors';
-// import { fetchNotes, deleteNote } from '../../store/notes/actions';
+import { logoutUser } from '../../store/user/actions';
 
 const UserPanelWrap = styled.div``;
 
+const UserLogin = styled.h3``;
+
 class UserPanel extends React.Component {
   render() {
-    return (
+    return this.props.user ? (
       <UserPanelWrap>
-        <FormSignin />
+        <UserLogin>{this.props.user.login}</UserLogin>
+        <Button type="button" onClick={this.handleLogout}>
+          logout
+        </Button>
+      </UserPanelWrap>
+    ) : (
+      <UserPanelWrap>
+        <FormSigninMini />
       </UserPanelWrap>
     );
   }
+  renderLogged() {}
+
+  handleLogout = () => {
+    this.props.logoutUser();
+  };
 }
 
 UserPanel.propTypes = {
   user: PropTypes.shape({
-    name: PropTypes.string.isRequired
+    login: PropTypes.string.isRequired
   })
 };
 
@@ -31,7 +46,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  // fetchNotes
+  logoutUser
 };
 
 export default connect(

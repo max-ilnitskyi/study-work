@@ -3,19 +3,19 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 
 import PageContentWrap from '../PageContentWrap';
-import FormRegistration from '../FormRegistration';
+import FormSigninFull from '../FormSigninFull';
 
-class PageRegistration extends React.Component {
+class PageLogin extends React.Component {
   render() {
     return (
       <PageContentWrap>
         <Helmet>
-          <title>Registration</title>
+          <title>Login</title>
         </Helmet>
-        <FormRegistration />
+        <FormSigninFull />
       </PageContentWrap>
     );
   }
 }
 
-export default PageRegistration;
+export default PageLogin;

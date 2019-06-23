@@ -1,5 +1,5 @@
 let needLogs = false;
-// needLogs = process.env.NODE_ENV !== 'production';
+needLogs = process.env.NODE_ENV !== 'production';
 
 const get = (url, onSuccess, onError) => {
   fetch(url, {

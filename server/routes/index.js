@@ -1,6 +1,7 @@
 const express = require('express');
 
 const notes = require('./notes');
+const user = require('./user');
 
 const router = new express.Router();
 
@@ -12,5 +13,6 @@ const router = new express.Router();
 // });
 
 router.use('/notes', notes);
+router.use('/user', user);
 
 module.exports = router;

@@ -1,7 +1,5 @@
 import constats from '../../constants';
-
-// import store from '../index';
-// import { usersList } from './selectors';
+import fetchJSON from '../../utils/fetchJSON';
 
 const { SET_USER } = constats.actionTypes;
 
@@ -10,27 +8,65 @@ export const setUser = user => ({
   payload: user
 });
 
-export const fetchUser = login => {
+export const fetchUser = (onSuccess, onError) => {
   return dispatch => {
-    fetch(`/api/users/${login}`, {
-      headers: {
-        Accept: 'application/json'
+    fetchJSON.get(
+      `/api/user`,
+      user => {
+        if (typeof onSuccess === 'function') onSuccess(user);
+        dispatch(setUser(user));
+      },
+      err => {
+        if (typeof onError === 'function') onError(err);
       }
-    })
-      .then(response => {
-        console.log('---response fetchUser1: ', response); //temp
-        if (!response.ok) {
-          throw new Error(`Response is not ok, status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(data => {
-        dispatch(setUser(data));
-        console.log('---response fetchUser2: ', data); //temp
-      })
-      .catch(err => {
-        if (process.env.NODE_ENV !== 'production')
-          console.log('---error fetchUser: ', err);
-      });
+    );
+  };
+};
+
+export const registrateUser = (newUser, onSuccess, onError) => {
+  return dispatch => {
+    fetchJSON.post(
+      `/api/user/registrate`,
+      newUser,
+      data => {
+        if (typeof onSuccess === 'function') onSuccess(data);
+        dispatch(fetchUser(data));
+      },
+      err => {
+        if (typeof onError === 'function') onError(err);
+      }
+    );
+  };
+};
+
+export const loginUser = (userToLogin, onSuccess, onError) => {
+  return dispatch => {
+    fetchJSON.post(
+      `/api/user/login`,
+      userToLogin,
+      data => {
+        if (typeof onSuccess === 'function') onSuccess(data);
+        dispatch(fetchUser(data));
+      },
+      err => {
+        if (typeof onError === 'function') onError(err);
+      }
+    );
+  };
+};
+
+export const logoutUser = (onSuccess, onError) => {
+  return dispatch => {
+    fetchJSON.post(
+      `/api/user/logout`,
+      {},
+      data => {
+        if (typeof onSuccess === 'function') onSuccess(data);
+        dispatch(setUser(null));
+      },
+      err => {
+        if (typeof onError === 'function') onError(err);
+      }
+    );
   };
 };

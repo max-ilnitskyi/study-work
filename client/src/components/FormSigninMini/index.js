@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
 // import { NavLink } from 'react-router-dom';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 import Button from '../Button';
 
@@ -12,7 +12,7 @@ import constants from '../../constants';
 // import { registrationLink } from '../../data';
 
 // import { notesList } from '../../store/notes/selectors';
-// import { setUser } from '../../store/user/actions';
+import { loginUser } from '../../store/user/actions';
 // import Loading from '../Loading';
 
 // [ Styled Components >>>>>>>
@@ -42,7 +42,7 @@ const SigninButton = styled(Button)`
 `;
 // <<<<<<< Styled Components ]
 
-class FormSignin extends React.Component {
+class FormSigninMini extends React.Component {
   render() {
     return (
       <Formik
@@ -69,12 +69,21 @@ class FormSignin extends React.Component {
   }
 
   handleSubmit = (values, formikBag) => {
-    // here will be handler
+    console.log('---send values', values);
+    this.props.loginUser(
+      values,
+      () => {
+        formikBag.resetForm();
+      },
+      () => {
+        formikBag.setSubmitting(false);
+      }
+    );
   };
 }
 
-FormSignin.propTypes = {
-  // setUser: PropTypes.func.isRequired
+FormSigninMini.propTypes = {
+  loginUser: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -82,10 +91,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  // setUser
+  loginUser
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(FormSignin);
+)(FormSigninMini);

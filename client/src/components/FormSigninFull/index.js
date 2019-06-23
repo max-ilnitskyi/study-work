@@ -10,7 +10,7 @@ import Button from '../Button';
 import constants from '../../constants';
 
 // import { notesList } from '../../store/notes/selectors';
-import { registrateUser } from '../../store/user/actions';
+import { loginUser } from '../../store/user/actions';
 // import Loading from '../Loading';
 
 // [ Styled Components >>>>>>>
@@ -31,24 +31,6 @@ const Label = styled.label`
 
 const TextField = styled(Field)`
   ${'' /* here must be styles */}
-`;
-
-const AcceptRulesLabel = styled.label`
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  margin-left: 5px;
-
-  border: 2px solid black;
-  border-radius: 50%;
-`;
-
-const AcceptRules = styled(Field).attrs({ type: 'checkbox' })`
-  display: none;
-
-  &:checked + ${AcceptRulesLabel} {
-    background-color: green;
-  }
 `;
 
 const StyledError = styled(ErrorMessage).attrs({ component: 'p' })`
@@ -75,76 +57,42 @@ const Title = styled.h3`
 // <<<<<<< Styled Components ]
 const yupSchema = yup.object().shape({
   login: yup.string().required('Login is required!'),
-  password1: yup.string().required('Password is required!'),
-  password2: yup
-    .string()
-    .required('Please, repeat password!')
-    .oneOf([yup.ref('password1')], 'Must be the same'),
-  accept: yup
-    .boolean()
-    .oneOf([true], 'Your must accept our rules for registration!')
+  password: yup.string().required('Password is required!')
 });
 
-class FormRegistration extends React.Component {
+class FormSigninFull extends React.Component {
   render() {
     return (
       <Formik
         initialValues={{
           login: '',
-          password1: '',
-          password2: '',
-          accept: false // must be the same as checked
+          password: ''
         }}
         validationSchema={yupSchema}
         onSubmit={this.handleSubmit}
       >
         {props => (
           <FormWrap>
-            <Title>Create new account:</Title>
+            <Title>Login:</Title>
             <FormLine>
-              <Label htmlFor="FormRegistration.login">Login: </Label>
-              <TextField type="text" name="login" id="FormRegistration.login" />
+              <Label htmlFor="FormSigninFull.login">Login: </Label>
+              <TextField type="text" name="login" id="FormSigninFull.login" />
               <StyledError name="login" />
             </FormLine>
 
             <FormLine>
-              <Label htmlFor="FormRegistration.password1">Password: </Label>
+              <Label htmlFor="FormSigninFull.password1">Password: </Label>
               <TextField
                 type="password"
-                name="password1"
-                id="FormRegistration.password1"
+                name="password"
+                id="FormSigninFull.password"
               />
-              <StyledError name="password1" />
-            </FormLine>
-
-            <FormLine>
-              <Label htmlFor="FormRegistration.password2">
-                Repeat password:{' '}
-              </Label>
-              <TextField
-                type="password"
-                name="password2"
-                id="FormRegistration.password2"
-              />
-              <StyledError name="password2" />
-            </FormLine>
-
-            <FormLine>
-              <Label htmlFor="FormRegistration.accept">
-                Do you accept our rules?
-              </Label>
-              <AcceptRules
-                name="accept"
-                id="FormRegistration.accept"
-                value="yes"
-              />
-              <AcceptRulesLabel htmlFor="FormRegistration.accept" />
-              <StyledError name="accept" />
+              <StyledError name="password" />
             </FormLine>
 
             <ButtonsWrap>
               <Button type="submit" disabled={this.props.isSubmitting}>
-                Registrate new user!
+                Login!
               </Button>
               <Button style={{ marginLeft: '20px' }} type="reset">
                 reset?
@@ -157,12 +105,8 @@ class FormRegistration extends React.Component {
   }
 
   handleSubmit = (values, formikBag) => {
-    const userData = {
-      login: values.login,
-      password: values.password1
-    };
-    this.props.registrateUser(
-      userData,
+    formikBag.props.loginUser(
+      values,
       () => {
         formikBag.resetForm();
       },
@@ -173,8 +117,8 @@ class FormRegistration extends React.Component {
   };
 }
 
-FormRegistration.propTypes = {
-  registrateUser: PropTypes.func.isRequired
+FormSigninFull.propTypes = {
+  loginUser: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -182,10 +126,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  registrateUser
+  loginUser
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(FormRegistration);
+)(FormSigninFull);

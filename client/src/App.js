@@ -8,6 +8,7 @@ import PageContentMain from './components/PageContentMain';
 import PageContentAbout from './components/PageContentAbout';
 import PageContentNotes from './components/PageContentNotes';
 import PageRegistration from './components/PageRegistration';
+import PageLogin from './components/PageLogin';
 import NotFound from './components/NotFound';
 import Messages from './components/Messages';
 import { GlobalStyle } from './styles';
@@ -30,6 +31,7 @@ class App extends React.Component {
               <Route path="/about" component={PageContentAbout} />
               <Route path="/notes" component={PageContentNotes} />
               <Route path="/registration" component={PageRegistration} />
+              <Route path="/login" component={PageLogin} />
               <Route component={NotFound} />
             </Switch>
             <Messages />

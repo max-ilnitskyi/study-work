@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 import constants from '../constants';
 
+// can be modefied by props: outline(boolean) and color
 const Button = styled.button.attrs(props => ({
   mainColor: props.color || constants.styles.SECONDARY_COLOR,
   whiteColor: '#fff',

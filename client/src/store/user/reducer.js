@@ -9,7 +9,7 @@ const defaultStore = {
 const reducer = (store = defaultStore, action) => {
   switch (action.type) {
     case SET_USER:
-      return action.payload;
+      return { ...store, user: action.payload };
 
     default:
       return store;
