@@ -8,6 +8,7 @@ import * as yup from 'yup';
 import Button from '../Button';
 
 import constants from '../../constants';
+import { messagesActions } from '../Messages';
 
 // import { notesList } from '../../store/notes/selectors';
 import { loginUser } from '../../store/user/actions';
@@ -105,13 +106,14 @@ class FormSigninFull extends React.Component {
   }
 
   handleSubmit = (values, formikBag) => {
-    formikBag.props.loginUser(
+    this.props.loginUser(
       values,
       () => {
         formikBag.resetForm();
       },
-      () => {
+      err => {
         formikBag.setSubmitting(false);
+        messagesActions.showError(err || 'Sign in error');
       }
     );
   };

@@ -8,6 +8,7 @@ import * as yup from 'yup';
 import Button from '../Button';
 
 import constants from '../../constants';
+import { messagesActions } from '../Messages';
 
 // import { notesList } from '../../store/notes/selectors';
 import { registrateUser } from '../../store/user/actions';
@@ -166,8 +167,9 @@ class FormRegistration extends React.Component {
       () => {
         formikBag.resetForm();
       },
-      () => {
+      err => {
         formikBag.setSubmitting(false);
+        messagesActions.showError(err || 'Registration error');
       }
     );
   };

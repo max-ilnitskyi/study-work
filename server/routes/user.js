@@ -1,70 +1,78 @@
 const express = require('express');
 
-// const notesControllers = require('../controllers/notesControllers');
 const User = require('../models/User');
 const config = require('../config');
 
 const router = new express.Router();
 
-// registrate new user
-router.post('/registrate', (req, res) => {
-  const newUser = req.body;
-  console.log('----', newUser);
+// get user from session
+router.get('/', (req, res, next) => {
+  if (!req.session.userID) return res.jsonErr('User not logged in');
 
-  if (!newUser || !newUser.login || !newUser.password) {
-    return res.status(400).send('Need login and password to registrate');
-  }
+  User.findById(req.session.userID).exec((err, data) => {
+    if (err) return next(err);
+
+    if (!data) return next(new Error('Can not find user by id from session'));
+
+    res.jsonOk({ user: data });
+  });
+});
+
+// registrate new user
+router.post('/registrate', (req, res, next) => {
+  if (req.session.userID) return res.jsonErr('You already logged in');
+
+  const newUser = req.body;
+
+  if (!newUser || !newUser.login || !newUser.password)
+    return res.jsonErr('Need login and password to registrate');
 
   User.findOne({ login: newUser.login }).exec((err, data) => {
-    if (data) return res.status(400).send('User already exist');
+    if (err) return next(err);
+
+    if (data) return res.jsonErr('User already exist');
 
     const query = User.create({
       login: newUser.login,
       password: newUser.password
     });
 
-    query.then(data => res.sendStatus(200)).catch(err => res.sendStatus(500));
+    query
+      .then(user => {
+        req.session.userID = user._id;
+        res.jsonOk({ user });
+      })
+      .catch(err => next(err));
   });
 });
 
 // login
-router.post('/login', (req, res) => {
-  const userToLogin = req.body;
-
-  if (!userToLogin || !userToLogin.login || !userToLogin.password) {
-    return res.status(400).send('Need login and password to login');
+router.post('/login', (req, res, next) => {
+  if (req.session.userID) {
+    return res.jsonErr('You already logged in');
   }
 
+  const userToLogin = req.body;
+
+  if (!userToLogin || !userToLogin.login || !userToLogin.password)
+    return res.jsonErr('Need login and password to login');
+
   User.findOne({ login: userToLogin.login }).exec((err, data) => {
-    if (err) return res.status(400).send('User not exist');
+    if (err) return next(err);
 
     if (data.password !== userToLogin.password)
-      return res.status(400).send('Wrong Password');
+      return res.jsonErr('Wrong password');
 
     req.session.userID = data._id;
-    // res.json(data);
-    res.status(200).send('Login and password correct! Please, fetch data.');
+    res.jsonOk({ user: data });
   });
 });
 
 // logout
-router.post('/logout', (req, res) => {
-  if (!req.session.userID) return res.status(400).send('You are not logged');
-
+router.post('/logout', (req, res, next) => {
   req.session.userID = null;
-  res.status(200).send('You successfylly logout! Please, fetch data.');
-});
 
-// get user from session
-router.get('/', (req, res) => {
-  if (!req.session.userID) return res.status(400).send('Not logged');
-
-  User.findById(req.session.userID).exec((err, data) => {
-    if (err)
-      return res.status(500).send('Can not access user by id in session');
-
-    res.json({ login: data.login, _id: data._id });
-  });
+  res.status(200).jsonOk();
 });
 
 // wrong request

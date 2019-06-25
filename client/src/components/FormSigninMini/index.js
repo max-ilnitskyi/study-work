@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import Button from '../Button';
 
 import constants from '../../constants';
+import { messagesActions } from '../Messages';
 
 // import { registrationLink } from '../../data';
 
@@ -75,8 +76,9 @@ class FormSigninMini extends React.Component {
       () => {
         formikBag.resetForm();
       },
-      () => {
+      err => {
         formikBag.setSubmitting(false);
+        messagesActions.showError(err || 'Sign in error');
       }
     );
   };

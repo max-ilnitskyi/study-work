@@ -1,82 +1,65 @@
 let needLogs = false;
 needLogs = process.env.NODE_ENV !== 'production';
 
-const get = (url, onSuccess, onError) => {
+const thenParseJson = response => {
+  if (needLogs) console.log('---response fetchJSON(1): ', response); //temp?
+
+  return response.json();
+};
+
+const thenUseCallback = callback => data => {
+  if (needLogs) console.log('---response fetchJSON(2): ', data); //temp?
+
+  if (callback) callback(data);
+};
+
+const catchUseCallback = callback => err => {
+  if (needLogs) console.log('---error fetchJSON: ', err);
+
+  const localErrorData = {
+    ok: false,
+    message: 'Unexpected error'
+  };
+
+  callback(localErrorData);
+};
+
+const get = (url, parsedJsonCallback) => {
   fetch(url, {
     headers: {
       Accept: 'application/json'
     }
   })
-    .then(response => {
-      if (needLogs) console.log('---response fetchJSON get(1): ', response); //temp?
-
-      if (!response.ok) {
-        throw new Error(`Response is not ok, status: ${response.status}`);
-      }
-
-      return response.json();
-    })
-    .then(data => {
-      if (needLogs) console.log('---response fetchJSON get(2): ', data); //temp?
-
-      if (typeof onSuccess === 'function') onSuccess(data);
-    })
-    .catch(err => {
-      if (needLogs) console.log('---error fetchNotes: ', err);
-
-      if (typeof onError === 'function') onError(err);
-    });
+    .then(thenParseJson)
+    .then(thenUseCallback(parsedJsonCallback))
+    .catch(catchUseCallback(parsedJsonCallback));
 };
 
-const post = (url, data, onSuccess, onError) => {
-  let dataJSON;
-  try {
-    dataJSON = JSON.stringify(data);
-  } catch (err) {
-    return onError(err);
-  }
-
-  return fetch(url, {
+const post = (url, data, parsedJsonCallback) => {
+  fetch(url, {
     method: 'post',
-    body: dataJSON,
+    body: JSON.stringify(data),
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      Accept: 'application/json'
     }
   })
-    .then(response => {
-      if (needLogs) console.log('---response fetchJSON post: ', response); //temp?
-
-      if (!response.ok) {
-        throw new Error(`Response is not ok, status: ${response.status}`);
-      }
-
-      if (typeof onSuccess === 'function') onSuccess(response);
-    })
-    .catch(err => {
-      if (needLogs) console.log('---error fetchJSON post: ', err); //temp?
-
-      if (typeof onError === 'function') onError(err);
-    });
+    .then(thenParseJson)
+    .then(thenUseCallback(parsedJsonCallback))
+    .catch(catchUseCallback(parsedJsonCallback));
 };
 
-const deleteData = (url, onSuccess, onError) => {
-  return fetch(url, {
-    method: 'delete'
+const deleteData = (url, parsedJsonCallback) => {
+  fetch(url, {
+    method: 'delete',
+    headers: {
+      // 'Content-Type': 'application/json',
+      Accept: 'application/json'
+    }
   })
-    .then(response => {
-      if (needLogs) console.log('---response fetchJSON delete: ', response); //temp?
-
-      if (!response.ok) {
-        throw new Error(`Response is not ok, status: ${response.status}`);
-      }
-
-      if (typeof onSuccess === 'function') onSuccess(response);
-    })
-    .catch(err => {
-      if (needLogs) console.log('---error fetchJSON delete: ', err); //temp?
-
-      if (typeof onError === 'function') onError(err);
-    });
+    .then(thenParseJson)
+    .then(thenUseCallback(parsedJsonCallback))
+    .catch(catchUseCallback(parsedJsonCallback));
 };
 
 const fetchJSON = {

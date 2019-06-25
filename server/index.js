@@ -11,6 +11,10 @@ const MongoStore = require('connect-mongo')(session);
 const config = require('./config');
 const routes = require('./routes');
 const mongoConnection = require('./utils/mongoConnection');
+const sendJsonExtending = require('./utils/sendJsonExtending');
+
+// add res.jsonOk and res.jsonErr custom methods
+sendJsonExtending(express);
 
 // relative path to static files
 const clientBuildPath = config.clientBuildPath;
