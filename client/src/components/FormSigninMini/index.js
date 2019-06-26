@@ -57,7 +57,11 @@ class FormSigninMini extends React.Component {
           <FormWrap>
             <FieldsWrap>
               <TextField type="text" name="login" placeholder="login" />
-              <TextField type="text" name="password" placeholder="password" />
+              <TextField
+                type="password"
+                name="password"
+                placeholder="password"
+              />
             </FieldsWrap>
 
             <SigninButton type="submit" disabled={this.props.isSubmitting}>
