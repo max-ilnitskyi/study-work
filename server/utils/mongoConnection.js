@@ -16,13 +16,13 @@ const startConnection = mongodbUri => {
       console.log('DB connection succeed, uri: ', mongodbUri);
     })
     .on('error', err => {
-      isConnected = false;
+      // isConnected = false;
       console.log('DB connection error: ', err);
     })
     .on('disconnected', () => {
       isConnected = false;
       console.log('DB disconnected, trying to connect again...');
-      connect(); // if disconnected try to connect again
+      setTimeout(connect, 500); // if disconnected try to connect again
     });
 
   // connect to MongoDB

@@ -36,6 +36,8 @@ const get = (url, parsedJsonCallback) => {
 };
 
 const post = (url, data, parsedJsonCallback) => {
+  if (needLogs) console.log('---fetchJSON send data: ', data); //temp?
+
   fetch(url, {
     method: 'post',
     body: JSON.stringify(data),
