@@ -60,6 +60,8 @@ router.post('/login', (req, res, next) => {
   User.findOne({ login: userToLogin.login }).exec((err, data) => {
     if (err) return next(err);
 
+    if (!data) return res.jsonErr('User with this login do not exist');
+
     if (data.password !== userToLogin.password)
       return res.jsonErr('Wrong password');
 
