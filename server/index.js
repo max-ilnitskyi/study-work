@@ -14,9 +14,6 @@ const routes = require('./routes');
 const mongoConnection = require('./utils/mongoConnection');
 const sendJsonExtending = require('./utils/sendJsonExtending');
 
-// Passport Config
-require('./config/passport')(passport);
-
 // add res.jsonOk and res.jsonErr custom methods
 sendJsonExtending(express);
 
@@ -57,12 +54,7 @@ app.use(passport.session());
 // temp testing
 app.use((req, res, next) => {
   console.log('---session: ', req.session);
-  console.log('---user: ', req.user);
   next();
-});
-
-app.get('/sss', function(req, res, next) {
-  res.send(`***auth***: ${req.isAuthenticated()} `);
 });
 
 // temp check session

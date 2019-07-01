@@ -34,9 +34,11 @@ UserSchema.methods.setPassword = function(password) {
     .toString('hex');
 };
 
-UserSchema.statics.filtrateForClient = function(fullUser) {
+UserSchema.methods.filtrateForClient = function() {
   return {
-    login: fullUser.login
+    user: {
+      login: this.login
+    }
   };
 };
 
