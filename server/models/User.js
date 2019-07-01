@@ -14,9 +14,30 @@ const crypto = require('crypto');
 
 const Schema = mongoose.Schema;
 
-const NoteSchema = new Schema({
+const UserSchema = new Schema({
   login: { type: String, required: true },
-  password: { type: String, required: true }
+  hash: { type: String, required: true },
+  salt: { type: String, required: true }
 });
 
-module.exports = mongoose.model('User', NoteSchema);
+UserSchema.methods.verifyPassword = function(password) {
+  var hash = crypto
+    .pbkdf2Sync(password, this.salt, 10000, 512, 'sha512')
+    .toString('hex');
+  return this.hash === hash;
+};
+
+UserSchema.methods.setPassword = function(password) {
+  this.salt = crypto.randomBytes(16).toString('hex');
+  this.hash = crypto
+    .pbkdf2Sync(password, this.salt, 10000, 512, 'sha512')
+    .toString('hex');
+};
+
+UserSchema.statics.filtrateForClient = function(fullUser) {
+  return {
+    login: fullUser.login
+  };
+};
+
+module.exports = mongoose.model('User', UserSchema);

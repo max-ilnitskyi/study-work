@@ -6,12 +6,16 @@ const logger = require('morgan');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
 const session = require('express-session');
+const passport = require('passport');
 const MongoStore = require('connect-mongo')(session);
 
 const config = require('./config');
 const routes = require('./routes');
 const mongoConnection = require('./utils/mongoConnection');
 const sendJsonExtending = require('./utils/sendJsonExtending');
+
+// Passport Config
+require('./config/passport')(passport);
 
 // add res.jsonOk and res.jsonErr custom methods
 sendJsonExtending(express);
@@ -39,12 +43,27 @@ if (process.env.NODE_ENV === 'production') {
 app.use(
   session({
     secret: config.secret,
-    cookie: { maxAge: 60000 * 10 },
+    cookie: { maxAge: 60000 / 1 }, // TODO: need set normal
+    rolling: true,
     resave: false,
     saveUninitialized: false,
     store: new MongoStore({ mongooseConnection: mongoose.connection })
   })
 );
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+// temp testing
+app.use((req, res, next) => {
+  console.log('---session: ', req.session);
+  console.log('---user: ', req.user);
+  next();
+});
+
+app.get('/sss', function(req, res, next) {
+  res.send(`***auth***: ${req.isAuthenticated()} `);
+});
 
 // temp check session
 app.get('/getsession', (req, res) => {
