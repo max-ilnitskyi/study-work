@@ -5,11 +5,11 @@ function validateYupShemaToObject(values, yupShema) {
     yupShema.validateSync(values, { abortEarly: false });
     return {};
   } catch (error) {
-    return _getErrorsFromValidationError(error);
+    return getErrorsFromValidationError(error);
   }
 }
 
-function _getErrorsFromValidationError(validationError) {
+function getErrorsFromValidationError(validationError) {
   const FIRST_ERROR = 0;
   return validationError.inner.reduce((errors, error) => {
     return {

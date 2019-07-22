@@ -4,7 +4,10 @@ import styled, { keyframes } from 'styled-components';
 
 import Container from './Container';
 
+// Lifetime of message
 const MESSAGE_LIFE_TIME = 3;
+
+// Show and hide transitions
 const SHOW_TRANSITION = 0.5;
 const HIDE_TRANSITION = 0.5;
 
@@ -95,7 +98,7 @@ class Messages extends React.Component {
       messages: []
     };
 
-    // bindings below for exports
+    // bindings for exports
     showMessage = this.showMessage.bind(this);
     showSuccess = this.showSuccess.bind(this);
     showError = this.showError.bind(this);
@@ -112,22 +115,29 @@ class Messages extends React.Component {
           </MessageWrap>
         ))}
 
-        {!this.state.messages.length || (
+        {this.state.messages.length !== 0 && (
           <HideAllContainer>
-            <HideAll onClick={this.handleHideAll}>hide all</HideAll>
+            <HideAll onClick={this.handleHideAllButton}>hide all</HideAll>
           </HideAllContainer>
         )}
       </MessagesWrap>
     );
   }
 
-  showMessage(text, type = 'inform') {
-    const id = getNewId();
+  componentWillUnmount() {
+    this.hideAllMessages();
+  }
 
+  // Function for export to show message with any type(inform by default)
+  showMessage(text, type = 'inform') {
+    const id = getNewId(); // Get id for new message
+
+    // Set timeout to hide message
     const hideTimeout = setTimeout(() => {
       this.hideMessage(id);
     }, MESSAGE_LIFE_TIME * 1000);
 
+    // Add new message to state
     this.setState({
       messages: [
         ...this.state.messages,
@@ -141,48 +151,62 @@ class Messages extends React.Component {
     });
   }
 
+  // Function for export to show success message
   showSuccess(text) {
     this.showMessage(text, 'success');
   }
 
+  // Function for export to show error message
   showError(text) {
     this.showMessage(text, 'error');
   }
 
+  // Hide message by id
+  // In this case message wil be hidden immedeatly, HIDE_TRANSITION will not work
   hideMessage(id) {
+    // Get copy of messages array
     const messages = [...this.state.messages];
+    // Find message by id
     const targetIndex = messages.findIndex(message => message.id === id);
 
+    // If message founded remove it from array and update state
     if (targetIndex !== -1) {
       messages.splice(targetIndex, 1);
       this.setState({
         messages
       });
     } else {
-      console.log('--- message not found, can not delete, id: ', id); //temp
+      // Else report failure
+      console.log('--- message not found by id, can not be deleted. Id: ', id); //temp
     }
   }
 
+  // Hide all messages
   hideAllMessages() {
+    // Clear all timeouts
     this.state.messages.forEach(message => {
       clearTimeout(message.hideTimeout);
     });
 
+    // Clear state
     this.setState({
       messages: []
     });
   }
 
-  handleHideAll = () => {
+  // Hide all messages by button click
+  handleHideAllButton = () => {
     this.hideAllMessages();
   };
 }
 
+// Generate unique id for new message
 let nextId = 1;
 function getNewId() {
   return nextId++;
 }
 
+// Prepare to export actions
 const messagesActions = {
   showMessage: (...args) => {
     showMessage(...args);
@@ -194,8 +218,6 @@ const messagesActions = {
     showError(...args);
   }
 };
-
-window.messagesActions = messagesActions; //temp
 
 export default Messages;
 export { messagesActions };

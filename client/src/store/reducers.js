@@ -1,10 +1,12 @@
 import { combineReducers } from 'redux';
 
-import notes from './notes/reducer';
+// Import reducers
+import stories from './stories/reducer';
 import user from './user/reducer';
 
+// Combine redusers
 const reducer = combineReducers({
-  notes,
+  stories,
   user
 });
 

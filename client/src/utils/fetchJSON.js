@@ -1,69 +1,92 @@
-let needLogs = false;
-needLogs = process.env.NODE_ENV !== 'production';
+// When needLogs == true, all requests/responses logged in browser console.
+// Logs used in dev by default, just comment it if logs not needed
+let needLogs = process.env.NODE_ENV !== 'production';
 
+const createErrorObject = message => ({
+  ok: false,
+  message: message || 'Unexpected error'
+});
+
+// then function for json parsing and logging
 const thenParseJson = response => {
-  if (needLogs) console.log('---response fetchJSON(1): ', response); //temp?
+  if (needLogs) console.log('---fetchJSON response(original): ', response);
 
   return response.json();
 };
 
-const thenUseCallback = callback => data => {
-  if (needLogs) console.log('---response fetchJSON(2): ', data); //temp?
+// then function for parsed object logging
+const thenLogObject = data => {
+  if (needLogs) console.log('---fetchJSON response(parsed): ', data);
 
-  if (callback) callback(data);
+  return data;
 };
 
-const catchUseCallback = callback => err => {
-  if (needLogs) console.log('---error fetchJSON: ', err);
+// catch function for error data object creating and logging
+const catchErrors = err => {
+  if (needLogs) console.log('---!!!fetchJSON error: ', err);
 
-  const localErrorData = {
-    ok: false,
-    message: 'Unexpected error'
-  };
+  // create custom error data object
+  const localErrorObject = createErrorObject();
 
-  callback(localErrorData);
+  return localErrorObject;
 };
 
-const get = (url, parsedJsonCallback) => {
-  fetch(url, {
+// Wrapper for fetch with get method
+const get = url => {
+  return fetch(url, {
     headers: {
       Accept: 'application/json'
     }
   })
     .then(thenParseJson)
-    .then(thenUseCallback(parsedJsonCallback))
-    .catch(catchUseCallback(parsedJsonCallback));
+    .then(thenLogObject)
+    .catch(catchErrors);
 };
 
-const post = (url, data, parsedJsonCallback) => {
-  if (needLogs) console.log('---fetchJSON send data: ', data); //temp?
+// Wrapper for fetch with post method
+const post = (url, data) => {
+  // Logging sending data
+  if (needLogs) console.log('---***fetchJSON send data: ', data);
 
-  fetch(url, {
+  let dataJson;
+
+  try {
+    dataJson = JSON.stringify(data);
+  } catch (err) {
+    // Logging parsing error
+    if (needLogs) console.log('---***fetchJSON send data parsing error: ', err);
+
+    // return resolved promise with local error object
+    return Promise.resolve(createErrorObject());
+  }
+
+  return fetch(url, {
     method: 'post',
-    body: JSON.stringify(data),
+    body: dataJson,
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json'
     }
   })
     .then(thenParseJson)
-    .then(thenUseCallback(parsedJsonCallback))
-    .catch(catchUseCallback(parsedJsonCallback));
+    .then(thenLogObject)
+    .catch(catchErrors);
 };
 
-const deleteData = (url, parsedJsonCallback) => {
-  fetch(url, {
+// Wrapper for fetch with delete method
+const deleteData = url => {
+  return fetch(url, {
     method: 'delete',
     headers: {
-      // 'Content-Type': 'application/json',
       Accept: 'application/json'
     }
   })
     .then(thenParseJson)
-    .then(thenUseCallback(parsedJsonCallback))
-    .catch(catchUseCallback(parsedJsonCallback));
+    .then(thenLogObject)
+    .catch(catchErrors);
 };
 
+// Unite fetch wrappers
 const fetchJSON = {
   get,
   post,

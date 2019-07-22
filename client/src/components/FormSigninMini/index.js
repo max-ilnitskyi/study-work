@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
-// import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import Button from '../Button';
@@ -12,7 +11,7 @@ import { messagesActions } from '../Messages';
 
 // import { registrationLink } from '../../data';
 
-// import { notesList } from '../../store/notes/selectors';
+// import { storiesList } from '../../store/stories/selectors';
 import { loginUser } from '../../store/user/actions';
 // import Loading from '../Loading';
 
@@ -74,17 +73,15 @@ class FormSigninMini extends React.Component {
   }
 
   handleSubmit = (values, formikBag) => {
-    console.log('---send values', values);
-    this.props.loginUser(
-      values,
-      () => {
+    this.props.loginUser(values).then(data => {
+      if (data.ok) {
         formikBag.resetForm();
-      },
-      err => {
+        messagesActions.showSuccess('You successfully logged in');
+      } else {
         formikBag.setSubmitting(false);
-        messagesActions.showError(err || 'Sign in error');
+        messagesActions.showError(data.message || 'Sign in error');
       }
-    );
+    });
   };
 }
 
@@ -93,7 +90,7 @@ FormSigninMini.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  // notesList: notesList(state)
+  // storiesList: storiesList(state)
 });
 
 const mapDispatchToProps = {

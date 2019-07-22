@@ -5,27 +5,37 @@ import reducer from './reducers';
 
 import { fetchUser } from './user/actions';
 
+// default middlewares
 let middlewares = [thunk];
 
-// dinamic imports of middlewares in 'development' mode
+// Additional middlewares for development
 if (process.env.NODE_ENV !== 'production') {
+  // dynamic import redux logger
   const { createLogger } = require('redux-logger');
   const logger = createLogger({
     collapsed: true
   });
+
+  // Unite middlewares
   middlewares = [...middlewares, logger];
 }
 
+// default enhancers
 let enhancers = [applyMiddleware(...middlewares)];
 
-// dinamic imports of enhancers in 'development' mode
+// Additional enhancers for development
 if (process.env.NODE_ENV !== 'production') {
+  // dynamic import redux devtools extension
   const { devToolsEnhancer } = require('redux-devtools-extension');
+
+  // Unite enhancers
   enhancers = [...enhancers, devToolsEnhancer()];
 }
 
+// Create store
 const store = createStore(reducer, compose(...enhancers));
 
+// Fetch user when store created
 store.dispatch(fetchUser());
 
 export default store;

@@ -8,44 +8,59 @@ const router = new express.Router();
 
 // Get user from session
 router.get('/', (req, res, next) => {
-  if (!req.session.userID) return res.jsonErr('User not logged in');
+  // If user not logged in
+  if (!req.user) return res.jsonOk({ user: null });
 
-  User.findById(req.session.userID).exec((err, user) => {
-    if (err) return next(err);
+  res.jsonOk({ user: req.user.trimForClient() });
+});
 
-    if (!user) return next(new Error('Can not find user by id from session'));
+// Get check is user exist
+router.post('/check-login', (req, res, next) => {
+  // If login to chck not receved
+  if (req.body.login == undefined)
+    return res.jsonReject('There is no login to check');
 
-    res.jsonOk(user.filtrateForClient());
-  });
+  const checkQuery = User.exists({ login: req.body.login });
+
+  checkQuery
+    .then(exist => res.jsonOk({ isFree: !exist }))
+    .catch(err => next(err));
 });
 
 // Registrate new user
 router.post('/registrate', (req, res, next) => {
-  if (req.session.userID) return res.jsonErr('You already logged in');
+  // If user already logged send reject
+  if (req.user) return res.jsonReject('You already logged in');
 
-  const userToRegistrate = req.body;
+  const reqUserData = req.body;
 
-  if (
-    !userToRegistrate ||
-    !userToRegistrate.login ||
-    !userToRegistrate.password
-  )
-    return res.jsonErr('Need login and password to registrate');
+  // If some data for registration missing
+  if (!reqUserData || !reqUserData.login || !reqUserData.password)
+    return res.jsonReject('Need login and password to registrate');
 
-  User.findOne({ login: userToRegistrate.login }).exec((err, data) => {
+  // Try to find user with same login
+  const findQuery = User.findOne({ login: reqUserData.login });
+  findQuery.exec((err, data) => {
     if (err) return next(err);
 
-    if (data) return res.jsonErr('User already exist');
+    // login already used
+    if (data) return res.jsonReject('User already exist');
 
+    // Define new user
     const newUser = new User();
-    newUser.login = userToRegistrate.login;
-    newUser.setPassword(userToRegistrate.password);
+    newUser.login = reqUserData.login;
+    newUser.setPassword(reqUserData.password);
 
+    // Try to save new user
     newUser
       .save()
       .then(user => {
-        req.session.userID = user._id;
-        res.jsonOk(user.filtrateForClient());
+        // Manually login passport, send user data if successfully
+        req.login(user, function(err) {
+          if (err) return next(err);
+
+          return res.jsonOk({ user: user.trimForClient() });
+        });
       })
       .catch(err => next(err));
   });
@@ -53,38 +68,36 @@ router.post('/registrate', (req, res, next) => {
 
 // login
 router.post('/login', (req, res, next) => {
-  if (req.session.userID) {
-    return res.jsonErr('You already logged in');
-  }
+  // If user already logged send user data to client
+  if (req.user) return res.jsonReject('You already logged in');
 
   const userToLogin = req.body;
 
+  // If some data for login missing
   if (!userToLogin || !userToLogin.login || !userToLogin.password)
-    return res.jsonErr('Need login and password to login');
+    return res.jsonReject('Need login and password to login');
 
-  User.findOne({ login: userToLogin.login }).exec((err, user) => {
+  // Use passport auth with castom callback
+  passport.authenticate('local', function(err, user, info) {
     if (err) return next(err);
 
-    if (!user) return res.jsonErr('User with this login do not exist');
+    // If user not passed, reason must be in info.message. So send it
+    if (!user) return res.jsonReject(info.message);
 
-    if (!user.verifyPassword(userToLogin.password))
-      return res.jsonErr('Wrong password');
+    // Manually login passport, send user data if successfully
+    req.login(user, function(err) {
+      if (err) return next(err);
 
-    req.session.userID = user._id;
-    res.jsonOk(user.filtrateForClient());
-  });
+      return res.jsonOk({ user: user.trimForClient() });
+    });
+  })(req, res, next); // Run middleware on the spot
 });
 
 // logout
 router.post('/logout', (req, res, next) => {
-  req.session.userID = null;
+  req.logout();
 
   res.jsonOk();
-});
-
-// wrong request
-router.use((req, res) => {
-  res.sendStatus(404);
 });
 
 module.exports = router;

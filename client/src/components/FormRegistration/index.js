@@ -7,10 +7,12 @@ import * as yup from 'yup';
 
 import Button from '../Button';
 
+import fetchJSON from '../../utils/fetchJSON';
+
 import constants from '../../constants';
 import { messagesActions } from '../Messages';
 
-// import { notesList } from '../../store/notes/selectors';
+// import { storiesList } from '../../store/stories/selectors';
 import { registrateUser } from '../../store/user/actions';
 // import Loading from '../Loading';
 
@@ -74,8 +76,16 @@ const Title = styled.h3`
   margin-bottom: 20px;
 `;
 // <<<<<<< Styled Components ]
+
+const checkLogin = login => fetchJSON.post(`/api/user/check-login`, { login });
+
 const yupSchema = yup.object().shape({
-  login: yup.string().required('Login is required!'),
+  login: yup
+    .string()
+    .required('Login is required!')
+    .test('is-exist', 'User with this login already exist', login =>
+      checkLogin(login).then(data => Promise.resolve(data.ok && data.isFree))
+    ),
   password1: yup.string().required('Password is required!'),
   password2: yup
     .string()
@@ -162,16 +172,15 @@ class FormRegistration extends React.Component {
       login: values.login,
       password: values.password1
     };
-    this.props.registrateUser(
-      userData,
-      () => {
+
+    this.props.registrateUser(userData).then(data => {
+      if (data.ok) {
         formikBag.resetForm();
-      },
-      err => {
+      } else {
         formikBag.setSubmitting(false);
-        messagesActions.showError(err || 'Registration error');
+        messagesActions.showError(data.message || 'Registration error');
       }
-    );
+    });
   };
 }
 
@@ -180,7 +189,7 @@ FormRegistration.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  // notesList: notesList(state)
+  // storiesList: storiesList(state)
 });
 
 const mapDispatchToProps = {

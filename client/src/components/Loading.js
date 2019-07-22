@@ -1,10 +1,10 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
 
-const SCALE = 0.8;
+const SCALE = 0.8; // How many space to use
 const SHOW_TRANSITION = 0.5;
 
-const animation = keyframes`
+const rotateAnimation = keyframes`
   0% {
     transform: scale(${SCALE}) rotate(0);
   }
@@ -13,7 +13,7 @@ const animation = keyframes`
   }
 `;
 
-const show = keyframes`
+const showAnimation = keyframes`
   0% {
     opacity: 0;
   }
@@ -32,10 +32,11 @@ const Svg = styled.svg`
   fill: black;
   fill: ${props => props.color};
 
-  animation: ${animation} 4s infinite linear,
-    ${show} ${SHOW_TRANSITION + 's'} ease;
+  animation: ${rotateAnimation} 4s infinite linear,
+    ${showAnimation} ${SHOW_TRANSITION + 's'} ease;
 `;
 
+// Show spinning gear wheel, uses available space
 function Loading(props) {
   return (
     <Svg color={props.color} viewBox="0 0 84 84">

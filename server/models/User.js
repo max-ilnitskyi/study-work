@@ -1,17 +1,6 @@
 const mongoose = require('mongoose');
 const crypto = require('crypto');
 
-// for (let i = 1; i <= 3; i++) {
-//   const salt = crypto.randomBytes(16).toString('hex');
-//   const fakePass = '12345';
-//
-//   console.log(`--- cool salt(${i}):`, salt);
-//   console.log(
-//     `--- cool hash(${i}):`,
-//     crypto.pbkdf2Sync(fakePass, salt, 10000, 512, 'sha512').toString('hex')
-//   );
-// }
-
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
@@ -20,6 +9,7 @@ const UserSchema = new Schema({
   salt: { type: String, required: true }
 });
 
+// Method to verify heshed password
 UserSchema.methods.verifyPassword = function(password) {
   var hash = crypto
     .pbkdf2Sync(password, this.salt, 10000, 512, 'sha512')
@@ -27,6 +17,7 @@ UserSchema.methods.verifyPassword = function(password) {
   return this.hash === hash;
 };
 
+// Method to set heshed password
 UserSchema.methods.setPassword = function(password) {
   this.salt = crypto.randomBytes(16).toString('hex');
   this.hash = crypto
@@ -34,11 +25,11 @@ UserSchema.methods.setPassword = function(password) {
     .toString('hex');
 };
 
-UserSchema.methods.filtrateForClient = function() {
+// Method to prepare user object before send to trimForClient
+// Mainly to remove secure data
+UserSchema.methods.trimForClient = function() {
   return {
-    user: {
-      login: this.login
-    }
+    login: this.login
   };
 };
 

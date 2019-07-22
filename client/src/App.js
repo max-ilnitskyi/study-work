@@ -3,18 +3,30 @@ import { Provider } from 'react-redux';
 import { Route, BrowserRouter, Switch } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 
+// Wrap component with header and footer for all pages
 import Page from './components/Page';
+
+// Pages components
 import PageContentMain from './components/PageContentMain';
-import PageContentAbout from './components/PageContentAbout';
-import PageContentNotes from './components/PageContentNotes';
+import PageContentMyStories from './components/PageContentMyStories';
+import PageContentAllStories from './components/PageContentAllStories';
+import PageContentSingleStory from './components/PageContentSingleStory';
 import PageRegistration from './components/PageRegistration';
 import PageLogin from './components/PageLogin';
 import NotFound from './components/NotFound';
+
+// Component where showed quick messages
 import Messages from './components/Messages';
+
+// Global styled styles
 import { GlobalStyle } from './styles';
 
+// Redux store
 import store from './store';
-import { headTitleMain as headTitle } from './data';
+
+import {
+  headTitleMain as headTitle // Head title for index page (also default)
+} from './data';
 
 class App extends React.Component {
   render() {
@@ -28,8 +40,9 @@ class App extends React.Component {
             <GlobalStyle />
             <Switch>
               <Route exact path="/" component={PageContentMain} />
-              <Route path="/about" component={PageContentAbout} />
-              <Route path="/notes" component={PageContentNotes} />
+              <Route path="/my-stories" component={PageContentMyStories} />
+              <Route path="/all-stories" component={PageContentAllStories} />
+              <Route path="/story/:id" component={PageContentSingleStory} />
               <Route path="/registration" component={PageRegistration} />
               <Route path="/login" component={PageLogin} />
               <Route component={NotFound} />

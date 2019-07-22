@@ -1,6 +1,6 @@
 const express = require('express');
 
-const notes = require('./notes');
+const stories = require('./stories');
 const user = require('./user');
 
 const router = new express.Router();
@@ -12,7 +12,7 @@ const router = new express.Router();
 //   }, 1000);
 // });
 
-router.use('/notes', notes);
+router.use('/stories', stories);
 router.use('/user', user);
 
 module.exports = router;

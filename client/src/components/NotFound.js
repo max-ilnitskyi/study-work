@@ -1,19 +1,24 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import PageContentWrap from './PageContentWrap';
+
 const Pathname = styled.span`
   color: grey;
 `;
 
 const ErrorText = styled.h2`
-  padding: 15px;
+  ${'' /* there must be styles */}
 `;
 
+// Not found page for router
 function NotFound(props) {
   return (
-    <ErrorText>
-      Sorry, Page <Pathname>{props.location.pathname}</Pathname> not found!
-    </ErrorText>
+    <PageContentWrap>
+      <ErrorText>
+        Sorry, Page <Pathname>{props.location.pathname}</Pathname> not found!
+      </ErrorText>
+    </PageContentWrap>
   );
 }
 

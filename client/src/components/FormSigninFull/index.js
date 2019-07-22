@@ -10,7 +10,7 @@ import Button from '../Button';
 import constants from '../../constants';
 import { messagesActions } from '../Messages';
 
-// import { notesList } from '../../store/notes/selectors';
+// import { storiesList } from '../../store/stories/selectors';
 import { loginUser } from '../../store/user/actions';
 // import Loading from '../Loading';
 
@@ -106,16 +106,14 @@ class FormSigninFull extends React.Component {
   }
 
   handleSubmit = (values, formikBag) => {
-    this.props.loginUser(
-      values,
-      () => {
+    this.props.loginUser(values).then(data => {
+      if (data.ok) {
         formikBag.resetForm();
-      },
-      err => {
+      } else {
         formikBag.setSubmitting(false);
-        messagesActions.showError(err || 'Sign in error');
+        messagesActions.showError(data.message || 'Sign in error');
       }
-    );
+    });
   };
 }
 
@@ -124,7 +122,7 @@ FormSigninFull.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  // notesList: notesList(state)
+  // storiesList: storiesList(state)
 });
 
 const mapDispatchToProps = {
