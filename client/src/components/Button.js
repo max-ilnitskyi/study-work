@@ -78,7 +78,8 @@ const Button = styled.button.attrs(props => ({
     `}
 `;
 
-// ghhh
+// Returns component with filtrated props
+// May be needed when 'as' prop used
 Button.withoutCustomProps = Component => ({
   mainColor,
   whiteColor,
