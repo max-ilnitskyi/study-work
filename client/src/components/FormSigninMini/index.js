@@ -5,15 +5,12 @@ import { Formik, Form, Field } from 'formik';
 import PropTypes from 'prop-types';
 
 import Button from '../Button';
+import SigninIcon from './SigninIcon';
 
 import constants from '../../constants';
 import { messagesActions } from '../Messages';
 
-// import { registrationLink } from '../../data';
-
-// import { storiesList } from '../../store/stories/selectors';
 import { loginUser } from '../../store/user/actions';
-// import Loading from '../Loading';
 
 // [ Styled Components >>>>>>>
 const FormWrap = styled(Form)`
@@ -34,6 +31,9 @@ const FieldsWrap = styled.div`
 `;
 
 const SigninButton = styled(Button)`
+  width: 40px;
+  padding: 0;
+
   flex-shrink: 0;
   flex-grow: 0;
 
@@ -64,7 +64,7 @@ class FormSigninMini extends React.Component {
             </FieldsWrap>
 
             <SigninButton type="submit" disabled={this.props.isSubmitting}>
-              Sign in
+              <SigninIcon />
             </SigninButton>
           </FormWrap>
         )}
@@ -79,7 +79,7 @@ class FormSigninMini extends React.Component {
         messagesActions.showSuccess('You successfully logged in');
       } else {
         formikBag.setSubmitting(false);
-        messagesActions.showError(data.message || 'Sign in error');
+        messagesActions.showError(data.message);
       }
     });
   };

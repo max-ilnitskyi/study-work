@@ -92,7 +92,9 @@ class Story extends React.Component {
         <StoryTitle>{this.props.title}</StoryTitle>
         <StoryText>{this.props.text}</StoryText>
         {this.props.global && (
-          <StoryAuthor>Author: {this.props.user.login || 'none'}</StoryAuthor>
+          <StoryAuthor>
+            Author: {(this.props.user && this.props.user.login) || 'unknown'}
+          </StoryAuthor>
         )}
       </StoryWrap>
     );
@@ -109,7 +111,10 @@ Story.propTypes = {
   text: PropTypes.string.isRequired,
   _id: PropTypes.string.isRequired,
   color: PropTypes.string.isRequired,
-  user: PropTypes.shape({ login: PropTypes.string }),
+  user: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.shape({ login: PropTypes.string })
+  ]),
   deleteStory: PropTypes.func,
   isWaitingDeleteResponse: PropTypes.bool
 };

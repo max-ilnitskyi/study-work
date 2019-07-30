@@ -24,10 +24,10 @@ export const allStoriesLink = {
   href: '/all-stories'
 };
 
-export const loginLink = {
-  name: 'Login',
-  href: '/login'
-};
+// export const loginLink = {
+//   name: 'Login',
+//   href: '/login'
+// };
 
 export const registrationLink = {
   name: 'Sign up',
@@ -38,7 +38,7 @@ export const navLinks = [
   mainLink,
   myStoriesLink,
   allStoriesLink,
-  loginLink,
+  // loginLink,
   registrationLink
 ];
 // <<<<<<< Links ]

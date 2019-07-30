@@ -7,33 +7,33 @@ const {
   SET_ALL_STORIES_FETCH_STATE
 } = constats.actionTypes;
 
-const defaultStore = {
+const defaultState = {
   myStoriesList: null,
   myStoriesFetchState: null,
   allStoriesList: null,
   allStoriesFetchState: null
 };
 
-const reducer = (store = defaultStore, action) => {
+const reducer = (state = defaultState, action) => {
   switch (action.type) {
     // Set user's stories
     case SET_MY_STORIES:
-      return { ...store, myStoriesList: action.payload };
+      return { ...state, myStoriesList: action.payload };
 
     // Set user's stories fetch state
     case SET_MY_STORIES_FETCH_STATE:
-      return { ...store, myStoriesFetchState: action.payload };
+      return { ...state, myStoriesFetchState: action.payload };
 
     // Set common stories
     case SET_ALL_STORIES:
-      return { ...store, allStoriesList: action.payload };
+      return { ...state, allStoriesList: action.payload };
 
     // Set common stories fetch state
     case SET_ALL_STORIES_FETCH_STATE:
-      return { ...store, allStoriesFetchState: action.payload };
+      return { ...state, allStoriesFetchState: action.payload };
 
     default:
-      return store;
+      return state;
   }
 };
 

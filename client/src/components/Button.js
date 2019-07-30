@@ -40,6 +40,10 @@ const Button = styled.button.attrs(props => ({
   text-decoration: none;
   transition: 0.1s;
 
+  & * {
+    fill: currentColor;
+  }
+
   ${({ outline, mainColor, whiteColor, greyColor }) => `
   color: ${outline ? mainColor : whiteColor};
   border: 2px solid ${mainColor};

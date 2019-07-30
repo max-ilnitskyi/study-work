@@ -1,6 +1,7 @@
 import constats from '../../constants';
 import fetchJSON from '../../utils/fetchJSON';
 import { remountApp } from '../../index';
+import { resetState } from '../reset/actions';
 
 const { SET_USER, SET_USER_FETCH_STATE } = constats.actionTypes;
 
@@ -85,6 +86,7 @@ export const logoutUser = () => {
       if (data.ok) {
         dispatch(setUser(null)); // Reset user data object if logout successfull
         dispatch(setUserFetchState('success')); // Set success
+        dispatch(resetState()); // Reset redux state
         remountApp(); // Remount all App
       } else {
         dispatch(setUserFetchState('error')); // Set error

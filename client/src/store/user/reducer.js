@@ -2,23 +2,23 @@ import constats from '../../constants';
 
 const { SET_USER, SET_USER_FETCH_STATE } = constats.actionTypes;
 
-const defaultStore = {
+const defaultState = {
   user: null,
   userFetchState: null // Can be: pending/error/success
 };
 
-const reducer = (store = defaultStore, action) => {
+const reducer = (state = defaultState, action) => {
   switch (action.type) {
     // Set user data object from action.payload
     case SET_USER:
-      return { ...store, user: action.payload };
+      return { ...state, user: action.payload };
 
     // Set fetch state from action.payload
     case SET_USER_FETCH_STATE:
-      return { ...store, userFetchState: action.payload };
+      return { ...state, userFetchState: action.payload };
 
     default:
-      return store;
+      return state;
   }
 };
 

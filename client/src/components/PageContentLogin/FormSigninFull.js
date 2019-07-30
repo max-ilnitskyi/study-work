@@ -10,9 +10,7 @@ import Button from '../Button';
 import constants from '../../constants';
 import { messagesActions } from '../Messages';
 
-// import { storiesList } from '../../store/stories/selectors';
 import { loginUser } from '../../store/user/actions';
-// import Loading from '../Loading';
 
 // [ Styled Components >>>>>>>
 const FormWrap = styled(Form)`

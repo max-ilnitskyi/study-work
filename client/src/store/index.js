@@ -4,6 +4,7 @@ import thunk from 'redux-thunk';
 import reducer from './reducers';
 
 import { fetchUser } from './user/actions';
+import { watchViewportWidthChange } from './viewport/actions';
 
 // default middlewares
 let middlewares = [thunk];
@@ -37,5 +38,8 @@ const store = createStore(reducer, compose(...enhancers));
 
 // Fetch user when store created
 store.dispatch(fetchUser());
+
+// Watch viewport width change
+store.dispatch(watchViewportWidthChange());
 
 export default store;

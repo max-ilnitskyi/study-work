@@ -3,7 +3,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 
 import PageContentWrap from '../PageContentWrap';
-import FormSigninFull from '../FormSigninFull';
+import FormSigninFull from './FormSigninFull';
 
 class PageLogin extends React.Component {
   render() {

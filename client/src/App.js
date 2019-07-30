@@ -11,8 +11,7 @@ import PageContentMain from './components/PageContentMain';
 import PageContentMyStories from './components/PageContentMyStories';
 import PageContentAllStories from './components/PageContentAllStories';
 import PageContentSingleStory from './components/PageContentSingleStory';
-import PageRegistration from './components/PageRegistration';
-import PageLogin from './components/PageLogin';
+import PageContentRegistration from './components/PageContentRegistration';
 import NotFound from './components/NotFound';
 
 // Component where showed quick messages
@@ -43,8 +42,7 @@ class App extends React.Component {
               <Route path="/my-stories" component={PageContentMyStories} />
               <Route path="/all-stories" component={PageContentAllStories} />
               <Route path="/story/:id" component={PageContentSingleStory} />
-              <Route path="/registration" component={PageRegistration} />
-              <Route path="/login" component={PageLogin} />
+              <Route path="/registration" component={PageContentRegistration} />
               <Route component={NotFound} />
             </Switch>
             <Messages />

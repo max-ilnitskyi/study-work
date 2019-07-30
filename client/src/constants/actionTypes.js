@@ -1,4 +1,8 @@
 const actionTypes = {
+  // Viewport width change action type
+  SET_VIEWPORT_WIDTH: 'SET_VIEWPORT_WIDTH',
+  // Reset action type
+  RESET_STATE: 'RESET_STATE',
   // Stories action types
   SET_MY_STORIES: 'SET_MY_STORIES',
   SET_MY_STORIES_FETCH_STATE: 'SET_MY_STORIES_FETCH_STATE',

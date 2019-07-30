@@ -11,7 +11,7 @@ const UserSchema = new Schema({
 
 // Method to verify heshed password
 UserSchema.methods.verifyPassword = function(password) {
-  var hash = crypto
+  const hash = crypto
     .pbkdf2Sync(password, this.salt, 10000, 512, 'sha512')
     .toString('hex');
   return this.hash === hash;
