@@ -1,12 +1,8 @@
 // Page head titles
-export const headTitleMain = `Study work`; // index and default title
-export const headTitleMyStories = `My Stories - Study work`;
-export const headTitleAllStories = `All Stories - Study work`;
-export const headTitleRegistration = ``;
-
-// Some text for pages
-export const pageTextAbout = `This application awesome`;
-export const pageTextMain = `This is my super-duper node.js/express/mongodb/react/redux... application!!!`;
+export const headTitleMain = `Stories`; // index and default title
+export const headTitleMyStories = `My Stories`;
+export const headTitleAllStories = `All Stories`;
+export const headTitleRegistration = `Sign up`;
 
 // [ Links >>>>>>>
 export const mainLink = {

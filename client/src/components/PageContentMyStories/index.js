@@ -7,18 +7,26 @@ import { Helmet } from 'react-helmet';
 import PageContentWrap from '../PageContentWrap';
 import FormNewStory from '../FormNewStory';
 import Story from '../Story';
+import TextLink from '../TextLink';
+import Paragraph from '../Paragraph';
+import Loading from '../Loading';
 
-import { myStoriesList } from '../../store/stories/selectors';
+import {
+  myStoriesList,
+  myStoriesFetchState
+} from '../../store/stories/selectors';
+import { user } from '../../store/user/selectors';
 import { fetchMyStories, deleteMyStory } from '../../store/stories/actions';
 import { messagesActions } from '../Messages';
 import {
   headTitleMyStories as headTitle,
   deleteStoryRequestSuccessText,
-  deleteStoryRequestErrorText
+  deleteStoryRequestErrorText,
+  registrationLink
 } from '../../data';
 
 const StoriesList = styled.div`
-  ${'' /* here must be styles */}
+  margin-top: 30px;
 `;
 
 const StoriesListItem = styled.div`
@@ -26,14 +34,6 @@ const StoriesListItem = styled.div`
   &:first-child {
     margin-top: 0;
   }
-`;
-
-const NewStoryFormWrap = styled.div`
-  margin-top: 30px;
-`;
-
-const StoriesMessage = styled.p`
-  margin-top: 18px;
 `;
 
 class PageContentMyStories extends React.Component {
@@ -51,11 +51,38 @@ class PageContentMyStories extends React.Component {
         <Helmet>
           <title>{headTitle}</title>
         </Helmet>
-        {this.props.myStoriesList && this.props.myStoriesList.length === 0 && (
-          <StoriesMessage>
-            You still have not stories! Create one with the form below.
-          </StoriesMessage>
+
+        {this.props.user && <FormNewStory />}
+
+        {this.props.user &&
+          !this.props.myStoriesList &&
+          this.props.myStoriesFetchState === 'pending' && <Loading standart />}
+
+        {this.props.user &&
+          !this.props.myStoriesList &&
+          this.props.myStoriesFetchState === 'error' && (
+            <Paragraph>
+              There is some problems in loading data. Try to reload page later.
+            </Paragraph>
+          )}
+
+        {this.props.user &&
+          this.props.myStoriesList &&
+          this.props.myStoriesList.length === 0 && (
+            <Paragraph>
+              Here are not any stories yet. Create one with the form above.
+            </Paragraph>
+          )}
+
+        {!this.props.user && (
+          <Paragraph>
+            To post your own stories you need sign in with form at the upper
+            right corner (or{' '}
+            <TextLink to={registrationLink.href}>create new account</TextLink>{' '}
+            if you have not any yet).
+          </Paragraph>
         )}
+
         <StoriesList>
           {this.props.myStoriesList &&
             this.props.myStoriesList.map(story => (
@@ -70,9 +97,6 @@ class PageContentMyStories extends React.Component {
               </StoriesListItem>
             ))}
         </StoriesList>
-        <NewStoryFormWrap>
-          <FormNewStory />
-        </NewStoryFormWrap>
       </PageContentWrap>
     );
   }
@@ -112,21 +136,17 @@ class PageContentMyStories extends React.Component {
 }
 
 PageContentMyStories.propTypes = {
-  myStoriesList: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string,
-      text: PropTypes.string.isRequired,
-      _id: PropTypes.string.isRequired,
-      color: PropTypes.string,
-      user: PropTypes.string
-    })
-  ),
+  myStoriesList: PropTypes.array,
   fetchMyStories: PropTypes.func.isRequired,
-  deleteMyStory: PropTypes.func.isRequired
+  deleteMyStory: PropTypes.func.isRequired,
+  myStoriesFetchState: PropTypes.string,
+  user: PropTypes.shape({})
 };
 
 const mapStateToProps = state => ({
-  myStoriesList: myStoriesList(state)
+  myStoriesList: myStoriesList(state),
+  myStoriesFetchState: myStoriesFetchState(state),
+  user: user(state)
 });
 
 const mapDispatchToProps = {

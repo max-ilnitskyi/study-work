@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Link, withRouter } from 'react-router-dom';
 
 import UserPanel from '../UserPanel';
 import Container from '../Container';
@@ -13,6 +14,8 @@ import MenuIcon from './MenuIcon';
 import { viewportWidth } from '../../store/viewport/selectors';
 
 import constants from '../../constants';
+
+const LinkForAs = Button.withoutCustomProps(Link);
 
 const HeaderWrap = styled.div`
   flex-shrink: 0;
@@ -32,19 +35,14 @@ const HeaderContainer = styled(Container)`
 `;
 
 const HeaderNavWrap = styled.div`
-
-    flex-shrink: 0;
-    flex-grow: 0;
-  /* @media (min-width: ${constants.breakpoints.TABLET}px) {
-  } */
+  flex-shrink: 0;
+  flex-grow: 0;
 `;
 
 const HeaderUserPanelWrap = styled.div`
-    flex-shrink: 0;
-    flex-grow: 0;
-    margin-left: auto;
-  /* @media (min-width: ${constants.breakpoints.TABLET}px) {
-  } */
+  flex-shrink: 0;
+  flex-grow: 0;
+  margin-left: auto;
 `;
 
 const MenuButton = styled(Button)`
@@ -65,15 +63,10 @@ const MenuWrap = styled.div`
   background-color: white;
 `;
 
+// Hash that will be used for modal menu link
+const menuHash = '#menu-nav';
+
 class Header extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      isMenuOpen: false
-    };
-  }
-
   render() {
     return this.props.viewportWidth < constants.breakpoints.TABLET
       ? this.renderButtonMenu()
@@ -84,18 +77,19 @@ class Header extends React.Component {
     return (
       <HeaderWrap>
         <HeaderContainer>
-          {this.state.isMenuOpen && (
+          {this.props.history.location.hash === menuHash && (
             <ModalWrap closeModal={this.handleMenuClose}>
               <MenuWrap>
-                <Nav onLinkClick={this.handleMenuClose} />
+                <Nav />
               </MenuWrap>
             </ModalWrap>
           )}
 
           <HeaderNavWrap>
             <MenuButton
+              as={LinkForAs}
+              to={menuHash}
               color={constants.styles.DARK_PRIMARY_COLOR}
-              onClick={this.handleMenuOpen}
             >
               <MenuIcon />
             </MenuButton>
@@ -123,12 +117,8 @@ class Header extends React.Component {
     );
   }
 
-  handleMenuOpen = () => {
-    this.setState({ isMenuOpen: true });
-  };
-
   handleMenuClose = () => {
-    this.setState({ isMenuOpen: false });
+    this.props.history.goBack();
   };
 }
 
@@ -144,7 +134,9 @@ const mapDispatchToProps = {
   // logoutUser
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Header);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Header)
+);

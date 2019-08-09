@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import Button from './Button';
 
-const LinkFiltratedForAs = Button.withoutCustomProps(Link);
+const LinkForAs = Button.withoutCustomProps(Link);
 
 const show = keyframes`
   from {
@@ -57,19 +57,42 @@ const StoryText = styled.p`
   ${'' /* here must be styles */}
 `;
 
+const OtherDataWrap = styled.div`
+  display: flex;
+`;
+
 const StoryAuthor = styled.p`
+  max-width: calc(100% - 120px);
+
+  font-size: 14px;
+  color: grey;
+`;
+
+const StoryCreatedDate = styled.p`
+  margin-left: auto;
+
   font-size: 14px;
   color: grey;
 `;
 
 // prop 'glbal' render element without delete button and show author
 class Story extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      createdAt: props.createdAt
+        ? new Date(props.createdAt).toLocaleDateString()
+        : 'unknown'
+    };
+  }
+
   render() {
     return (
       <StoryWrap color={this.props.color}>
         <ButtonsWrap>
           <StoryButton
-            as={LinkFiltratedForAs}
+            as={LinkForAs}
             to={`/story/${this.props._id}`}
             color="#C1CD00"
             outline
@@ -91,11 +114,14 @@ class Story extends React.Component {
         </ButtonsWrap>
         <StoryTitle>{this.props.title}</StoryTitle>
         <StoryText>{this.props.text}</StoryText>
-        {this.props.global && (
-          <StoryAuthor>
-            Author: {(this.props.user && this.props.user.login) || 'unknown'}
-          </StoryAuthor>
-        )}
+        <OtherDataWrap>
+          {this.props.global && (
+            <StoryAuthor>
+              Author: {(this.props.user && this.props.user.login) || 'unknown'}
+            </StoryAuthor>
+          )}
+          <StoryCreatedDate>Created: {this.state.createdAt}</StoryCreatedDate>
+        </OtherDataWrap>
       </StoryWrap>
     );
   }
@@ -111,6 +137,7 @@ Story.propTypes = {
   text: PropTypes.string.isRequired,
   _id: PropTypes.string.isRequired,
   color: PropTypes.string.isRequired,
+  createdAt: PropTypes.string,
   user: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.shape({ login: PropTypes.string })

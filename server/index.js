@@ -55,44 +55,6 @@ configPassport(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
-// temp testing
-app.use((req, res, next) => {
-  // console.log('---session: ', req.session);
-  // console.log('---user: ', req.user);
-  console.log(
-    '---user from session/passport: ',
-    req.session.passport && req.session.passport.user
-  );
-  next();
-});
-
-// temp check auth
-app.get('/sss', function(req, res, next) {
-  res.send(`***auth***: ${req.isAuthenticated()} `);
-});
-
-// temp check auth
-app.use(function(req, res, next) {
-  console.log(`***auth***: ${req.isAuthenticated()} `);
-  next();
-});
-
-// temp check session
-app.get('/getsession', (req, res) => {
-  if (req.session.count == undefined) {
-    req.session.count = 1;
-  } else {
-    req.session.count += 1;
-  }
-
-  res.json({
-    id: req.session.id,
-    cookie: req.session.id,
-    secret: config.secret,
-    count: req.session.count
-  });
-});
-
 // Delay API for dev
 app.use('/api', (req, res, next) => {
   setTimeout(() => next(), 1000);

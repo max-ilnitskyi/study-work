@@ -5,10 +5,14 @@ import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 
 import PageContentWrap from '../PageContentWrap';
-import FormNewStory from '../FormNewStory';
 import Story from '../Story';
+import Loading from '../Loading';
+import Paragraph from '../Paragraph';
 
-import { allStoriesList } from '../../store/stories/selectors';
+import {
+  allStoriesList,
+  allStoriesFetchState
+} from '../../store/stories/selectors';
 import { fetchAllStories } from '../../store/stories/actions';
 import { headTitleAllStories as headTitle } from '../../data';
 
@@ -21,14 +25,6 @@ const StoriesListItem = styled.div`
   &:first-child {
     margin-top: 0;
   }
-`;
-
-const NewStoryFormWrap = styled.div`
-  margin-top: 30px;
-`;
-
-const StoriesMessage = styled.p`
-  margin-top: 18px;
 `;
 
 class PageContentMyStories extends React.Component {
@@ -46,10 +42,21 @@ class PageContentMyStories extends React.Component {
         <Helmet>
           <title>{headTitle}</title>
         </Helmet>
+        {!this.props.allStoriesList &&
+          this.props.allStoriesFetchState === 'pending' && <Loading standart />}
+
+        {!this.props.allStoriesList &&
+          this.props.allStoriesFetchState === 'error' && (
+            <Paragraph>
+              Here is some problems in loading data. Try to reload page later.
+            </Paragraph>
+          )}
+
         {this.props.allStoriesList &&
           this.props.allStoriesList.length === 0 && (
-            <StoriesMessage>There are not any stories yet...</StoriesMessage>
+            <Paragraph>There are not any stories yet...</Paragraph>
           )}
+
         <StoriesList>
           {this.props.allStoriesList &&
             this.props.allStoriesList.map(story => (
@@ -64,9 +71,6 @@ class PageContentMyStories extends React.Component {
               </StoriesListItem>
             ))}
         </StoriesList>
-        <NewStoryFormWrap>
-          <FormNewStory />
-        </NewStoryFormWrap>
       </PageContentWrap>
     );
   }
@@ -77,20 +81,13 @@ class PageContentMyStories extends React.Component {
 }
 
 PageContentMyStories.propTypes = {
-  allStoriesList: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string,
-      text: PropTypes.string.isRequired,
-      _id: PropTypes.string.isRequired,
-      color: PropTypes.string,
-      user: PropTypes.shape({ login: PropTypes.string })
-    })
-  ),
+  allStoriesList: PropTypes.array,
   fetchAllStories: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-  allStoriesList: allStoriesList(state)
+  allStoriesList: allStoriesList(state),
+  allStoriesFetchState: allStoriesFetchState(state)
 });
 
 const mapDispatchToProps = {

@@ -12,6 +12,7 @@ router.get('/', (req, res, next) => {
 
   // Find stories by user id and send
   const findQuery = Story.find({ user: req.user._id });
+  findQuery.sort('-createdAt'); // Begin with newest
   findQuery.then(stories => res.jsonOk({ stories })).catch(err => next(err));
 });
 
@@ -22,6 +23,7 @@ router.get('/all', (req, res, next) => {
     path: 'user',
     select: 'login -_id'
   });
+  findQuery.sort('-createdAt'); // Begin with newest
   findQuery.then(stories => res.jsonOk({ stories })).catch(err => next(err));
 });
 
