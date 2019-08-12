@@ -54,7 +54,7 @@ const Button = styled.button.attrs(props => ({
     background-color: ${outline ? mainColor : whiteColor};
   }
 
-  :disabled {
+  &[disabled] {
     cursor: default;
     background-color: ${outline ? whiteColor : greyColor};
     color: ${outline ? greyColor : whiteColor};

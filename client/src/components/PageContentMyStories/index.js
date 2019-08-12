@@ -6,10 +6,11 @@ import { Helmet } from 'react-helmet';
 
 import PageContentWrap from '../PageContentWrap';
 import FormNewStory from '../FormNewStory';
-import Story from '../Story';
 import TextLink from '../TextLink';
 import Paragraph from '../Paragraph';
 import Loading from '../Loading';
+import StoriesList from '../StoriesList';
+import Pagination from '../Pagination';
 
 import {
   myStoriesList,
@@ -25,15 +26,22 @@ import {
   registrationLink
 } from '../../data';
 
-const StoriesList = styled.div`
-  margin-top: 30px;
+const FormWrap = styled.div`
+  margin-bottom: 30px;
 `;
 
-const StoriesListItem = styled.div`
-  margin-top: 30px;
-  &:first-child {
-    margin-top: 0;
-  }
+const PaginationWrap = styled.div`
+  margin-left: auto;
+  margin-right: auto;
+  width: fit-content;
+`;
+
+const PaginationWrapTop = styled(PaginationWrap)`
+  margin-bottom: 20px;
+`;
+
+const PaginationWrapBottom = styled(PaginationWrap)`
+  margin-top: 20px;
 `;
 
 class PageContentMyStories extends React.Component {
@@ -43,16 +51,31 @@ class PageContentMyStories extends React.Component {
     this.state = {
       storiesWaitingDeleteResponse: {}
     };
+
+    this.storiesOnPage = 3; // How many stories on page will be showed
+    this.mainAddress = '/my-stories';
   }
 
   render() {
+    const currentPageNum = Number(this.props.match.params.page) || 1;
+    const isNeedPagination = this.props.myStoriesList
+      ? this.props.myStoriesList.length > this.storiesOnPage
+      : false;
+
+    const currentStoriesList = this.getCurrentStoriesList(currentPageNum);
+    const pages = this.getPages();
+
     return (
       <PageContentWrap>
         <Helmet>
           <title>{headTitle}</title>
         </Helmet>
 
-        {this.props.user && <FormNewStory />}
+        {this.props.user && (
+          <FormWrap>
+            <FormNewStory />
+          </FormWrap>
+        )}
 
         {this.props.user &&
           !this.props.myStoriesList &&
@@ -83,20 +106,23 @@ class PageContentMyStories extends React.Component {
           </Paragraph>
         )}
 
-        <StoriesList>
-          {this.props.myStoriesList &&
-            this.props.myStoriesList.map(story => (
-              <StoriesListItem key={story._id}>
-                <Story
-                  {...story}
-                  deleteStory={this.deleteStory}
-                  isWaitingDeleteResponse={
-                    this.state.storiesWaitingDeleteResponse[story._id]
-                  }
-                />
-              </StoriesListItem>
-            ))}
-        </StoriesList>
+        {isNeedPagination && (
+          <PaginationWrapTop>
+            <Pagination pages={pages} currentPageNum={currentPageNum} />
+          </PaginationWrapTop>
+        )}
+
+        <StoriesList
+          stories={currentStoriesList}
+          storiesWaitingDeleteResponse={this.state.storiesWaitingDeleteResponse}
+          deleteStory={this.deleteStory}
+        />
+
+        {isNeedPagination && (
+          <PaginationWrapBottom>
+            <Pagination pages={pages} currentPageNum={currentPageNum} />
+          </PaginationWrapBottom>
+        )}
       </PageContentWrap>
     );
   }
@@ -133,6 +159,59 @@ class PageContentMyStories extends React.Component {
       }
     });
   };
+
+  getCurrentStoriesList(currentPageNum) {
+    const myStoriesList = this.props.myStoriesList;
+
+    // Return currentStoriesList if exist for current page
+    if (
+      this.currentStoriesList &&
+      this.currentStoriesList.page === currentPageNum &&
+      this.currentStoriesList.full === myStoriesList
+    )
+      return this.currentStoriesList;
+
+    // Make and return new currentStoriesList, if myStoriesList already fetched
+    if (myStoriesList) {
+      const storiesOnPage = this.storiesOnPage;
+
+      // Slice stories for current page
+      const currentStoriesList = myStoriesList.slice(
+        (currentPageNum - 1) * storiesOnPage,
+        currentPageNum * storiesOnPage
+      );
+      currentStoriesList.page = currentPageNum; // Point page of stories
+      currentStoriesList.full = myStoriesList; // Point full list
+
+      this.currentStoriesList = currentStoriesList; // Save current list
+
+      return currentStoriesList;
+    }
+
+    // Return null if can not return list
+    return null;
+  }
+
+  getPages() {
+    if (this.props.myStoriesList) {
+      const mainAddress = this.mainAddress;
+      const pages = [];
+      pages.push({ href: mainAddress, text: `Page 1` });
+
+      const pagesAmount = Math.ceil(
+        this.props.myStoriesList.length / this.storiesOnPage
+      );
+      // debugger;
+      for (let i = 2; i <= pagesAmount; i++) {
+        pages.push({ href: `${mainAddress}/${i}`, text: `Page ${i}` });
+      }
+
+      return pages;
+    }
+
+    // Return null if can not return pages
+    return null;
+  }
 }
 
 PageContentMyStories.propTypes = {

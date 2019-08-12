@@ -14,13 +14,6 @@ const StoryErrorMessage = styled.h2`
   ${'' /* there must be styles */}
 `;
 
-const LoadingWrap = styled.div`
-  width: 50px;
-  height: 50px;
-  margin-left: auto;
-  margin-right: auto;
-`;
-
 class PageContentSingleStory extends React.Component {
   constructor(props) {
     super(props);
@@ -34,13 +27,7 @@ class PageContentSingleStory extends React.Component {
   render() {
     return (
       <PageContentWrap>
-        {this.state.fetchState === 'pending' && (
-          <React.Fragment>
-            <LoadingWrap>
-              <Loading />
-            </LoadingWrap>
-          </React.Fragment>
-        )}
+        {this.state.fetchState === 'pending' && <Loading standart />}
 
         {this.state.fetchState === 'error' && (
           <React.Fragment>
@@ -59,24 +46,11 @@ class PageContentSingleStory extends React.Component {
             <Story {...this.state.story} global />
           </React.Fragment>
         )}
-
-        {/* <Helmet>
-          <title>{headTitle}</title>
-        </Helmet>
-        <Story
-          {...story}
-          global
-          isWaitingDeleteResponse={
-            this.state.storiesWaitingDeleteResponse[story._id]
-          }
-        /> */}
       </PageContentWrap>
     );
   }
 
   componentDidMount() {
-    // console.log(this.props.match.params.id);
-
     this.props.fetchSingleStory(this.props.match.params.id).then(data => {
       // If problem with fetching
       if (!data.ok) return this.setState({ fetchState: 'error' });
@@ -92,7 +66,7 @@ PageContentSingleStory.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  // here must bbe selectors
+  // here must be selectors
 });
 
 const mapDispatchToProps = {

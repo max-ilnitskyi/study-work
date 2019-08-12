@@ -39,7 +39,15 @@ class App extends React.Component {
             <GlobalStyle />
             <Switch>
               <Route exact path="/" component={PageContentMain} />
+              <Route
+                path="/my-stories/:page"
+                component={PageContentMyStories}
+              />
               <Route path="/my-stories" component={PageContentMyStories} />
+              <Route
+                path="/all-stories/:page"
+                component={PageContentAllStories}
+              />
               <Route path="/all-stories" component={PageContentAllStories} />
               <Route path="/story/:id" component={PageContentSingleStory} />
               <Route path="/registration" component={PageContentRegistration} />

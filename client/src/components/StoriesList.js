@@ -20,10 +20,6 @@ const StyledListItem = styled.div`
 `;
 
 class StoriesList extends React.Component {
-  // constructor(props) {
-  //   super(props);
-  // }
-
   render() {
     return (
       <StoriesListWrap>
@@ -33,9 +29,11 @@ class StoriesList extends React.Component {
               <StyledListItem key={story._id}>
                 <Story
                   {...story}
-                  global
+                  global={this.props.global}
+                  deleteStory={this.props.deleteStory}
                   isWaitingDeleteResponse={
-                    this.state.storiesWaitingDeleteResponse[story._id]
+                    this.props.storiesWaitingDeleteResponse &&
+                    this.props.storiesWaitingDeleteResponse[story._id]
                   }
                 />
               </StyledListItem>
@@ -49,7 +47,8 @@ class StoriesList extends React.Component {
 StoriesList.propTypes = {
   stories: PropTypes.array,
   deleteStory: PropTypes.func,
-  waitingDeleteResponseList: PropTypes.any
+  global: PropTypes.bool,
+  storiesWaitingDeleteResponse: PropTypes.any
 };
 
 export default StoriesList;
