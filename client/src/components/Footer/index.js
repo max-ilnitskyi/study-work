@@ -18,13 +18,16 @@ const FooterContainer = styled(Container)`
   padding-bottom: 15px;
 `;
 
+const Copyright = styled.p`
+  text-align: center;
+`;
+
 class Footer extends React.Component {
   render() {
     return (
       <FooterWrap>
         <FooterContainer>
-          {/* temp */}
-          <div> Hello! It's footer</div>
+          <Copyright>© Stories, 2019</Copyright>
         </FooterContainer>
       </FooterWrap>
     );

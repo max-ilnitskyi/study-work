@@ -20,11 +20,6 @@ export const allStoriesLink = {
   href: '/all-stories'
 };
 
-// export const loginLink = {
-//   name: 'Login',
-//   href: '/login'
-// };
-
 export const registrationLink = {
   name: 'Sign up',
   href: '/registration'
@@ -34,7 +29,6 @@ export const navLinks = [
   mainLink,
   myStoriesLink,
   allStoriesLink,
-  // loginLink,
   registrationLink
 ];
 // <<<<<<< Links ]

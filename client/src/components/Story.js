@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 
 import Button from './Button';
 
+import constants from '../constants';
+
 const LinkForAs = Button.withoutCustomProps(Link);
 
 const show = keyframes`
@@ -17,7 +19,7 @@ const show = keyframes`
   }
 `;
 
-const StoryWrap = styled.div`
+const StoryWrap = styled.article`
   position: relative;
   padding: 10px;
 
@@ -29,36 +31,49 @@ const StoryWrap = styled.div`
 `;
 
 const ButtonsWrap = styled.div`
-  position: absolute;
+  /* position: absolute; */
   display: flex;
-  right: 5px;
-  top: 5px;
-
-  opacity: 0.3;
-
-  ${StoryWrap}:hover & {
-    opacity: 1;
-  }
+  flex-direction: column;
+  float: right;
+  /* right: 5px;
+  top: 5px; */
 
   & > * {
     margin-left: 5px;
+  }
+
+  @media (min-width: ${constants.breakpoints.TABLET}px) {
+    flex-direction: row;
+  }
+
+  @media (min-width: ${constants.breakpoints.DESKTOP}px) {
+    opacity: 0.3;
+
+    ${StoryWrap}:hover & {
+      opacity: 1;
+    }
   }
 `;
 
 const StoryButton = styled(Button)`
   font-size: 16px;
+  margin-bottom: 5px;
+
+  @media (min-width: ${constants.breakpoints.TABLET}px) {
+    margin-bottom: 0;
+  }
 `;
 
-const StoryTitle = styled.h3`
-  ${'' /* here must be styles */}
-`;
+const StoryTitle = styled.h3``;
 
 const StoryText = styled.p`
-  ${'' /* here must be styles */}
+  margin-top: 10px;
 `;
 
 const OtherDataWrap = styled.div`
   display: flex;
+  clear: both;
+  margin-top: 10px;
 `;
 
 const StoryAuthor = styled.p`

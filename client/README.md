@@ -1,6 +1,8 @@
+# Stories - study work
+
 ## Changing react scripts with react-app-rewired
 
-This app use react-app-rewired with react-app-rewire-styled-components. This needed provide babel-plugin-styled-components for styled components class naming.
+This app use react-app-rewired with react-app-rewire-styled-components. This needed to provide babel-plugin-styled-components for styled components class naming.
 Settings stored in config-overrides.js. Most of react-scripts replaced by react-app-rewired.
 
 ## Available Scripts

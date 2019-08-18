@@ -9,8 +9,8 @@ const styles = {
   LIGHT_SECONDARY_COLOR: '#FFCE9E',
   // other colors >>>
   GREY_COLOR: '#878787',
-  LIGHT_GREY_COLOR: '#ccc',
-  DARK_GREY_COLOR: '#333'
+  LIGHT_GREY_COLOR: '#aaa',
+  DARK_GREY_COLOR: '#555'
 };
 
 export default styles;

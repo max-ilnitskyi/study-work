@@ -1,16 +1,18 @@
 import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form } from 'formik';
 import PropTypes from 'prop-types';
 import * as yup from 'yup';
 
 import Button from '../Button';
+import FormikInputField from '../FormikInputField';
+import FormikSelectColor from '../FormikSelectColor';
+import FormikTextArea from '../FormikTextArea';
 
 import { postMyStory } from '../../store/stories/actions';
 import { messagesActions } from '../Messages';
 
-import { mixins } from '../../styles';
 import constants from '../../constants';
 import {
   newStoryColorsList as colorsList,
@@ -27,73 +29,20 @@ const StyledForm = styled(Form)`
   border-radius: 5px;
 `;
 
-const Label = styled.label`
-  ${'' /* here must be styles */}
-`;
-
-const FakeLabel = styled.span`
-  ${'' /* here must be styles */}
-`;
-
-const TextField = styled(Field)`
-  ${'' /* here must be styles */}
-`;
-
-const ColorsList = styled.ul`
-  display: inline-block;
-`;
-
-const ColorsListItem = styled.li`
-  display: inline-block;
-  margin-left: 5px;
-`;
-
-const ChooseColorLabel = styled.label`
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-
-  border-radius: 50%;
-  cursor: pointer;
-`;
-
-const ChooseColor = styled(Field).attrs({ type: 'radio' })`
-  ${mixins.visuallyHidden}
-
-  & + ${ChooseColorLabel} {
-    background-color: ${props => props.value};
-  }
-
-  &:checked + ${ChooseColorLabel} {
-    box-shadow: 0 0 0 2px white, 0 0 0 4px grey;
-  }
-
-  &:focus + ${ChooseColorLabel} {
-    box-shadow: 0 0 0 4px grey;
-  }
-`;
-
-const TextArea = styled(Field).attrs({ component: 'textarea' })`
-  width: 100%;
-  resize: none;
-`;
-
-const StyledError = styled(ErrorMessage).attrs({ component: 'p' })`
-  color: red;
-`;
-
 const FormLine = styled.div`
-  margin-top: 10px;
+  margin-top: 15px;
 
-  &:first-child {
+  :first-child {
     margin-top: 0;
   }
 `;
 
-const ButtonsWrap = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
+const ButtonWrap = styled.div`
+  display: block;
+  margin-top: 15px;
+  margin-left: auto;
+  margin-right: auto;
+  width: fit-content;
 `;
 
 const Title = styled.h3`
@@ -103,7 +52,7 @@ const Title = styled.h3`
 // <<<<<<< Styled Components ]
 
 const yupSchema = yup.object().shape({
-  title: yup.string().required('Text is required!'),
+  title: yup.string().required('Title is required!'),
   text: yup.string().required('Text is required!')
 });
 
@@ -123,25 +72,37 @@ class FormNewStory extends React.Component {
           <StyledForm>
             <Title>{mainTitle}</Title>
             <FormLine>
-              <Label htmlFor="FormNewStory.title">Title: </Label>
-              <TextField type="text" name="title" id="FormNewStory.title" />
-              <StyledError name="title" /> {/* temp */}
+              <FormikTextArea
+                rows="2"
+                formName="FormNewStory"
+                fieldName="title"
+                label="Title"
+                hasError={props.errors.title && props.touched.title}
+              />
             </FormLine>
 
             <FormLine>
-              <FakeLabel>Color:</FakeLabel>
-              <ColorsList>
-                {colorsList.map(color =>
-                  this.renderColorsListItem(color, props.values.color)
-                )}
-              </ColorsList>
+              <FormikSelectColor
+                colors={colorsList}
+                selectedColor={props.values.color}
+                formName="FormNewStory"
+                fieldName="color"
+                label="Color"
+                hasError={props.errors.color && props.touched.color}
+              />
             </FormLine>
+
             <FormLine>
-              <Label htmlFor="FormNewStory.text">Text: </Label>
-              <TextArea name="text" id="FormNewStory.text" rows="5" />
-              <StyledError name="text" />
+              <FormikTextArea
+                rows="5"
+                formName="FormNewStory"
+                fieldName="text"
+                label="Text"
+                hasError={props.errors.text && props.touched.text}
+              />
             </FormLine>
-            <ButtonsWrap>
+
+            <ButtonWrap>
               <Button
                 outline
                 type="submit"
@@ -150,27 +111,10 @@ class FormNewStory extends React.Component {
               >
                 Post Story!
               </Button>
-              <Button type="reset" outline>
-                reset?
-              </Button>
-            </ButtonsWrap>
+            </ButtonWrap>
           </StyledForm>
         )}
       </Formik>
-    );
-  }
-
-  renderColorsListItem(color, selectedColor) {
-    return (
-      <ColorsListItem key={color}>
-        <ChooseColor
-          name="color"
-          id={`FormNewStory.color.${color}`}
-          value={color}
-          checked={color === selectedColor}
-        />
-        <ChooseColorLabel htmlFor={`FormNewStory.color.${color}`} />
-      </ColorsListItem>
     );
   }
 

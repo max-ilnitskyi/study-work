@@ -175,9 +175,6 @@ class Messages extends React.Component {
       this.setState({
         messages
       });
-    } else {
-      // Else report failure
-      console.log('--- message not found by id, can not be deleted. Id: ', id); //temp
     }
   }
 

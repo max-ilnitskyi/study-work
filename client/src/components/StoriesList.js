@@ -1,18 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import Button from './Button';
 import Story from './Story';
 
 const StoriesListWrap = styled.div``;
 
-const StyledList = styled.div`
-  ${'' /* here must be styles */}
-`;
+const StyledList = styled.ul``;
 
-const StyledListItem = styled.div`
+const StyledListItem = styled.li`
   margin-top: 30px;
   &:first-child {
     margin-top: 0;

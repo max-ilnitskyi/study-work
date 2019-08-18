@@ -6,11 +6,11 @@ import PropTypes from 'prop-types';
 import * as yup from 'yup';
 
 import Button from '../Button';
+import FormikInputField from '../FormikInputField';
 
 import fetchJSON from '../../utils/fetchJSON';
 
 import constants from '../../constants';
-import FormikInputField from '../FormikInputField';
 import { messagesActions } from '../Messages';
 
 import { registrateUser } from '../../store/user/actions';
