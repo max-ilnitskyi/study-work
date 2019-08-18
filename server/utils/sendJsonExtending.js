@@ -32,7 +32,7 @@ const sendJsonExtending = express => {
       );
     }
 
-    this.status(status || 200).json(objectToSend);
+    this.status(status || 400).json(objectToSend);
   };
 };
 
