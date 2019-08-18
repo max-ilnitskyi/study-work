@@ -52,7 +52,7 @@ class PageContentMyStories extends React.Component {
       storiesWaitingDeleteResponse: {}
     };
 
-    this.storiesOnPage = 3; // How many stories on page will be showed
+    this.storiesOnPage = 10; // How many stories on page will be showed
     this.mainAddress = '/my-stories';
   }
 

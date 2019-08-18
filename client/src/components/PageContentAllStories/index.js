@@ -36,7 +36,7 @@ class PageContentMyStories extends React.Component {
   constructor(props) {
     super(props);
 
-    this.storiesOnPage = 3; // How many stories on page will be showed
+    this.storiesOnPage = 10; // How many stories on page will be showed
     this.mainAddress = '/all-stories';
   }
 
