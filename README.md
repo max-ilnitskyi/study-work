@@ -1,5 +1,64 @@
 # Stories - study work
 
+This is my stydy work.
+It is based on CRA and mainly uses the following libraries and frameworks: React, Redux, Styled Components, Express, Passport, Mongoose, etc.
+
+## Api and data flow
+
+This app uses JSON oriented API.
+
+### On server
+
+The server responds to a request with a JSON document.
+
+#### Ok
+
+If the server can process the request, response object will be sent with `res.jsonOk([...responseData])` custom method.
+
+
+Example:
+```
+{
+  ok: true,
+  user: {name: 'Nick'}
+}
+```
+Example if user not found in DB:
+```
+{
+  ok: true,
+  user: null
+}
+```
+
+#### Reject
+
+If the server can not process the request or some error has occured response object will be sent with `res.jsonReject([someMesage])` custom method.
+
+
+Example:
+```
+{
+  ok: false,
+  message: 'You are not authorized to complete this action.'
+}
+```
+
+### On client
+
+On client side uses custom fetch module `/client/src/utils/fetchJSON.js`. This module logs responses and requests(for post req) in no-production mode and sets needed headers. The module is used through methods: fetchJSON.get(url), fetchJSON.post(url, dataObject), etc.
+
+
+If server response with not ok status and have not JSON object, object will be created locally, for example:
+```
+{
+  ok: false,
+  message: 'Unexpected error'
+}
+```
+
+fetchJSON methods **always** return resolved promise with data object as value. In turn Redux actions also return resolved promise with data object as value to component(or another place where it was called).
+
 ## Changing react scripts with react-app-rewired
 
 This app use react-app-rewired with react-app-rewire-styled-components. This needed to provide babel-plugin-styled-components for styled components class naming.
@@ -7,9 +66,34 @@ Settings stored in config-overrides.js. Most of react-scripts replaced by react-
 
 ## Available Scripts
 
+### Global
+
+#### `npm run start`
+
+Runs the server without defining a mode.
+
+#### `npm run build`
+
+Runs `npm install` and `npm run build` from /client sripts. Mainly need for deploy at heroku.
+
+#### `npm run client`
+
+Runs `npm run start` from /client sripts.
+
+#### `npm run server`
+
+Uses nodemon package to runs the server without defining a mode.
+Nodemon will reload server if any error will occurred.
+
+#### `npm run dev`
+
+Uses concurrently package to runs `npm run server` and `npm run client` commands in parallel.
+
+### Client
+
 In the project directory, you can run:
 
-### `npm start`
+#### `npm run start`
 
 Runs the app in the development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
@@ -17,7 +101,7 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.<br>
 You will also see any lint errors in the console.
 
-### `npm run build`
+#### `npm run build`
 
 Builds the app for production to the `build` folder.<br>
 It correctly bundles React in production mode and optimizes the build for the best performance.
@@ -25,7 +109,7 @@ It correctly bundles React in production mode and optimizes the build for the be
 The build is minified and the filenames include the hashes.<br>
 Your app is ready to be deployed!
 
-### `npm run eject`
+#### `npm run eject`
 
 **Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
