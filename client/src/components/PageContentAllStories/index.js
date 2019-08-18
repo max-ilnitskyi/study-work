@@ -66,7 +66,7 @@ class PageContentMyStories extends React.Component {
 
         {this.props.allStoriesList &&
           this.props.allStoriesList.length === 0 && (
-            <Paragraph>There are not any stories yet...</Paragraph>
+            <Paragraph>Here are not any stories yet...</Paragraph>
           )}
 
         {isNeedPagination && (

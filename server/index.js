@@ -42,7 +42,7 @@ if (process.env.NODE_ENV === 'production') {
 app.use(
   session({
     secret: config.secret,
-    cookie: { maxAge: 60000 * 20 }, // TODO: need set to normal
+    cookie: { maxAge: 60000 * 60 },
     rolling: true,
     resave: false,
     saveUninitialized: false,
@@ -54,11 +54,6 @@ app.use(
 configPassport(passport);
 app.use(passport.initialize());
 app.use(passport.session());
-
-// Delay API for dev
-app.use('/api', (req, res, next) => {
-  setTimeout(() => next(), 1000);
-});
 
 // Connect API routes
 app.use('/api', mongoConnection.checkConnection, routes);
