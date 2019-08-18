@@ -13,7 +13,7 @@ The server responds to a request with a JSON document.
 
 #### Ok
 
-If the server can process the request, response object will be sent with `res.jsonOk([...responseData])` custom method.
+If the server can process the request, response object will be sent with `res.jsonOk([objectToMerge])` custom method.
 
 
 Example:
@@ -33,7 +33,7 @@ Example if user not found in DB:
 
 #### Reject
 
-If the server can not process the request or some error has occured response object will be sent with `res.jsonReject([someMesage])` custom method.
+If the server can not process the request or some error has occured response object will be sent with `res.jsonReject([someMesage, status])` custom method. By default status is 400.
 
 
 Example:
